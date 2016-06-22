@@ -1,8 +1,6 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import AwesomeComponent from './AwesomeComponent';
 import Header from './Components/Header';
-
+import Searchbar from './Components/Searchbar';
 class App extends React.Component{
   constructor(props){
     super(props);
@@ -15,6 +13,7 @@ class App extends React.Component{
     return (
       <div>
         <Header/>
+        <Searchbar/>
       </div>
     );
   }

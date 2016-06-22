@@ -6,9 +6,12 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var BUILD_DIR = path.resolve(__dirname, './build');
 var APP_DIR = path.resolve(__dirname, 'src/app');
 
-var config = {
+const config = {
+  devtool: 'eval-source-map',
+  // Add entry to connect hot loading middleware from page
   entry: [
-  APP_DIR + '/app.js',
+    'webpack-hot-middleware/client',
+    APP_DIR + '/app.js',
   //'webpack-dev-server/client?http://0.0.0.0:8080', //WebpackDevServer host and port
   //'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
   ],
@@ -67,6 +70,7 @@ var config = {
       jQuery: "jquery",
       React: 'react'
     }),
+    new webpack.HotModuleReplacementPlugin(),
     // Uglify in production.
 /*      new webpack.optimize.UglifyJsPlugin({
         mangle: {
@@ -74,7 +78,6 @@ var config = {
         },
         sourcemap: false
       })*/
-    // new webpack.HotModuleReplacementPlugin()
   ],
   // Some modules might use their own jquery. Use this to resolve other jquery into mine
   resolve: {

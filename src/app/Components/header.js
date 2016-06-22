@@ -1,5 +1,3 @@
-import React from 'react';
-
 require('./header.scss');
 
 class Header extends React.Component {
@@ -14,9 +12,6 @@ class Header extends React.Component {
   render(){
     return(
       <div className="header">
-        <h1>HEADER</h1>
-        <h3>SMALLER TEXT</h3>
-        <p>TESXT</p>
       </div>
     );
   }

@@ -72,6 +72,7 @@ const config = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(),
     // Uglify in production.
 /*      new webpack.optimize.UglifyJsPlugin({
         mangle: {

@@ -3,13 +3,13 @@ import express from 'express';
 import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import config from './webpack.config.js';
+import webpackConfig from './webpack.config.js';
 import bodyParser from 'body-parser';
 import MongoClient from 'mongodb';
 import DBConfig from './_config';
 // Note: Need to use the babel file otherwise cannot use es6 style
 const app = express();
-const compiler = webpack(config);
+const compiler = webpack(webpackConfig);
 
 let db;
 MongoClient.connect('mongodb://'+DBConfig.MONGO_USERNAME+':'+DBConfig.MONGO_PASSWORD+DBConfig.MONGO_APP,(err,database) =>{
@@ -25,7 +25,7 @@ MongoClient.connect('mongodb://'+DBConfig.MONGO_USERNAME+':'+DBConfig.MONGO_PASS
 
 // Extracts data from <form> elements and adds to body property in req object
 app.use(bodyParser.urlencoded({extended:true}));
-// app.use(express.static(__dirname + '/dist'));
+app.use(express.static(__dirname + '/src'));
 app.use(webpackMiddleware(compiler,{
   stats: {
     colors: true,
@@ -38,7 +38,7 @@ app.use(webpackHotMiddleware(compiler,{
 }));
 app.get('/', (req, res) => {
   // Note: __dirname is the path to your current working directory. 
-  res.sendFile(__dirname + '/src/index.html')
+  res.sendFile(__dirname + '/index.html')
   let cursor = db.collection('quotes').find().toArray(function(err,results){
     console.log(results);
   });

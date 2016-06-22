@@ -24,9 +24,9 @@ const config = {
     loaders : [
       {
         test : /\.jsx?/,
-        loaders: ['react-hot'],
+        loaders: ['react-hot','jsx-loader','babel'],
+        exclude: /node_modules/,
         include : APP_DIR, // What directory to look for extensions
-        loader : 'babel'
       },
       { 
         test: /\.scss$/, 
@@ -71,6 +71,7 @@ const config = {
       React: 'react'
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
     // Uglify in production.
 /*      new webpack.optimize.UglifyJsPlugin({
         mangle: {

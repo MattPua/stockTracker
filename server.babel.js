@@ -6,13 +6,13 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from './webpack.config.js';
 import bodyParser from 'body-parser';
 import MongoClient from 'mongodb';
+import DBConfig from './_config';
 // Note: Need to use the babel file otherwise cannot use es6 style
 const app = express();
 const compiler = webpack(config);
 
 let db;
-
-MongoClient.connect('mongodb://admin:497022@ds011321.mlab.com:11321/stocktracker',(err,database) =>{
+MongoClient.connect('mongodb://'+DBConfig.MONGO_USERNAME+':'+DBConfig.MONGO_PASSWORD+DBConfig.MONGO_APP,(err,database) =>{
   if(err) return console.error(err);
   db = database;
 
@@ -26,8 +26,16 @@ MongoClient.connect('mongodb://admin:497022@ds011321.mlab.com:11321/stocktracker
 // Extracts data from <form> elements and adds to body property in req object
 app.use(bodyParser.urlencoded({extended:true}));
 // app.use(express.static(__dirname + '/dist'));
-app.use(webpackMiddleware(compiler));
-app.use(webpackHotMiddleware(compiler));
+app.use(webpackMiddleware(compiler,{
+  stats: {
+    colors: true,
+    chunks: false,
+    'errors-only': true
+  }
+}));
+app.use(webpackHotMiddleware(compiler,{
+  log: console.log
+}));
 app.get('/', (req, res) => {
   // Note: __dirname is the path to your current working directory. 
   res.sendFile(__dirname + '/src/index.html')

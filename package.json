@@ -6,7 +6,6 @@
   "scripts": {
     "build": "webpack",
     "production": "webpack -p",
-    "start": "webpack-dev-server --content-base src --progress --watch --history-api-fallback --inline --hot",
     "preghpages": "npm run build && rm -rf gh-pages && cp -r src gh-pages && cp index.html build/* gh-pages",
     "ghpages": "npm run preghpages && ghpages -p gh-pages",
     "gh-pages": "npm run ghpages",
@@ -31,6 +30,8 @@
     "node-uuid": "^1.4.7",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "request": "^2.72.0",
+    "util": "^0.10.3",
     "webpack": "^1.13.1"
   },
   "devDependencies": {

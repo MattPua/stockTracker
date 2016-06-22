@@ -8,12 +8,14 @@ import bodyParser from 'body-parser';
 import MongoClient from 'mongodb';
 import DBConfig from './_config';
 import request from 'request';
+import util from 'util';
 // Note: Need to use the babel file otherwise cannot use es6 style
 const app = express();
 const compiler = webpack(webpackConfig);
 
-// Extracts data from <form> elements and adds to body property in req object
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+//app.use(multer()); // for parsing multipart/form-data
 app.use(express.static(__dirname + '/src'));
 // TODO: Development Mode Only
 app.use(webpackMiddleware(compiler,{
@@ -51,12 +53,14 @@ app.get('/', (req, res) => {
 });
 
 app.post('/quotes',(req,res) => {
+  util.log(util.inspect(req.body));
+
   request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'.TO&f=nab', (error,response,body) =>{
     console.log(response.statusCode);
     if (!error && response.statusCode == 200) {
-            console.log(body) // Print the google web page.
-         }
-         else console.log(error);
+      res.json({data: body});
+    }
+    else console.log(error);
   });
 /*  db.collection('quotes').save(req.body, (err,results) => {
     if (err) return console.error(err);

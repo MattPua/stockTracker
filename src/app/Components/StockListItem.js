@@ -6,9 +6,10 @@ class StockListItem extends React.Component{
   render(){
     return(
       <tr className="stock-list-item-container">
-        <td>Name</td>
-        <td>Symbol</td>
-        <td>Price</td>
+        <td>{this.props.name}</td>
+        <td>{this.props.symbol}</td>
+        <td>{this.props.ask}</td>
+        <td>{this.props.bid}</td>
       </tr>
     );
   }
@@ -16,7 +17,8 @@ class StockListItem extends React.Component{
 
 StockListItem.defaultProps = {
   name: '',
-  price: '',
+  ask: '',
+  bid: '',
   symbol: '',
 };
 StockListItem.propTypes = {};

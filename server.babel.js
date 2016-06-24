@@ -52,13 +52,50 @@ app.get('/', (req, res) => {
   });
 });
 
+app.post('/quotes/new',(req,res)=>{
+  util.log(util.inspect(req.body));
+  db.collection('quotes').save(req.body, (err,results) => {
+    if (err) return console.error(err);
+    console.log("Saved to database");
+    res.redirect('/');
+  });
+});
+
+app.get('/quotes',(req,res)=>{
+  let cursor = db.collection('quotes').find().toArray(function(err,results){
+    console.log(results);
+    res.json({stocks: results});
+  });
+});
+
 app.post('/quotes',(req,res) => {
   util.log(util.inspect(req.body));
 
-  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'.TO&f=nab', (error,response,body) =>{
-    console.log(response.statusCode);
+  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snab', (error,response,body) =>{
     if (!error && response.statusCode == 200) {
-      res.json({data: body});
+      console.log(body);
+      let stocksNoFormat = body.split('\n');
+      console.log(stocksNoFormat);
+      let stocksFormatted = [];
+      for(let stockNoFormat of stocksNoFormat){
+        let stock = {};
+        let stockArray = stockNoFormat.split(',');
+        for (let i in stockArray){
+          let key  = '';
+          let value = stockArray[i];
+          // TODO: Check this
+          if (value == '') break;
+          value = value.replace(/"/g,'');
+          if (i == 0) key = 'symbol';
+          else if (i==1) key='name';
+          else if (i==2) key = 'ask';
+          else if (i==3) key ='bid';
+          stock[key] = value;
+        }
+        if (Object.keys(stock).length)
+          stocksFormatted.push(stock);
+      }
+      res.json({data: stocksFormatted});
     }
     else console.log(error);
   });
@@ -67,7 +104,7 @@ app.post('/quotes',(req,res) => {
     console.log("Saved to database");
     res.redirect('/');
   });*/
-    res.redirect('/');
+    // res.redirect('/');
 
 });
 

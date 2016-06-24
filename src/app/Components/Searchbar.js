@@ -11,6 +11,7 @@ class Searchbar extends React.Component{
     let data = JSON.stringify({
       stock: this.state.query
     });
+    let that = this;
     $.ajax({
       url: 'quotes',
       type: 'POST',
@@ -18,7 +19,10 @@ class Searchbar extends React.Component{
       data:data,
       contentType: 'application/json',
       success: function(result){
-        console.log(result);
+        that.props.addStock(result);
+      },
+      error: function(err){
+        console.error(err);
       }
     });
   }
@@ -31,7 +35,7 @@ class Searchbar extends React.Component{
         <div className="searchbar">
           <form onSubmit={this.onSubmit.bind(this)} action='/quotes' method='POST'>
             <input type="text" placeholder="Stock Name or Symbol" value={this.state.query} onChange={this.onChange.bind(this)} name='stock'/>
-            <button type="submit">Search</button>
+            <button type="submit">Get Quote</button>
           </form>
         </div>
       </div>

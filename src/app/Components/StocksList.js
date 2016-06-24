@@ -11,7 +11,6 @@ class StocksList extends React.Component{
       this.getUpdatedStockInfo();
   }
   getUpdatedStockInfo(){
-    console.log(this.props.stocks);
     let stock = '';
     for (let i =0;i <this.props.stocks.length;i++){
       stock+=this.props.stocks[i];
@@ -33,7 +32,6 @@ class StocksList extends React.Component{
           let newStock = <StockListItem name={stock.name} symbol={stock.symbol} ask={stock.bid} bid={stock.bid}/>;
           stocks.push(newStock);
         }
-        console.log(result);
         that.setState({items: stocks});
       },
       error: function(err){

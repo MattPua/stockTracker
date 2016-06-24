@@ -40,16 +40,12 @@ class App extends React.Component{
       }
     });
   }
-  addStock(stock){
-    console.log(stock);
-    let details = stock.data.split(',');
+  addStock(obj){
+    let details = obj.data;
     if (details.indexOf('N/A')>=0) return;
-    console.log(details);
-    let symbol = details[0];
-    // Strip away any extra quotes
-    symbol = symbol.replace(/"/g,'');
-    let name = details[1];
-    name = name.replace(/"/g,"");
+    let stock = details[0];
+    let symbol = stock.symbol;
+    let name = stock.name;
     if (this.state.stocks.indexOf(symbol)>=0) return;
     let existingStocks = this.state.stocks.slice(0);
     existingStocks.push(symbol);

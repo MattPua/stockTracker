@@ -2,6 +2,10 @@ class StockListItem extends React.Component{
   constructor(props){
     super(props);
   }
+  onClick(){
+    console.log(this.props.symbol);;
+    this.props.removeStock(this.props.symbol);
+  }
 
   render(){
     return(
@@ -10,6 +14,7 @@ class StockListItem extends React.Component{
         <td>{this.props.symbol}</td>
         <td>{this.props.ask}</td>
         <td>{this.props.bid}</td>
+        <td><button type='button' onClick={this.onClick.bind(this)}>DELETE</button></td>
       </tr>
     );
   }

@@ -7,11 +7,12 @@ var BUILD_DIR = path.resolve(__dirname, './build');
 var APP_DIR = path.resolve(__dirname, 'src/app');
 
 const config = {
-  devtool: 'eval-source-map',
+  /*devtool: 'eval-source-map',*/
   // Add entry to connect hot loading middleware from page
   entry: [
     'webpack-hot-middleware/client',
     APP_DIR + '/app.js',
+    'webpack/hot/dev-server',
   //'webpack-dev-server/client?http://0.0.0.0:8080', //WebpackDevServer host and port
   //'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
   ],
@@ -66,8 +67,8 @@ const config = {
   plugins: [
     new ExtractTextPlugin("style.css", { allChunks: true }),
     new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery",
+/*      $: "jquery",
+      jQuery: "jquery",*/
       React: 'react'
     }),
     new webpack.HotModuleReplacementPlugin(),

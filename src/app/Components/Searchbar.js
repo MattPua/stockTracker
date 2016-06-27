@@ -5,26 +5,10 @@ class Searchbar extends React.Component{
       query: ''
     };
   }
-
   onSubmit(event){
     event.preventDefault();
-    let data = JSON.stringify({
-      stock: this.state.query
-    });
-    let that = this;
-    $.ajax({
-      url: 'quotes',
-      type: 'POST',
-      dataType: "json",
-      data:data,
-      contentType: 'application/json',
-      success: function(result){
-        that.props.addStock(result);
-      },
-      error: function(err){
-        console.error(err);
-      }
-    });
+    this.props.searchStock(this.state.query);
+    this.setState({query: ''});
   }
   onChange(event){
     this.setState({query: event.target.value});

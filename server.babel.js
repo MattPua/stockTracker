@@ -3,6 +3,7 @@ import express from 'express';
 import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import expressLogger from 'express-logger';
 import webpackConfig from './webpack.config.js';
 import bodyParser from 'body-parser';
 import MongoClient from 'mongodb';
@@ -29,6 +30,7 @@ app.use(webpackMiddleware(compiler,{
 app.use(webpackHotMiddleware(compiler,{
   log: console.log
 }));
+app.use(expressLogger({path: '/logs/log.txt'}));
 
 
 let db;
@@ -53,19 +55,37 @@ app.get('/', (req, res) => {
 });
 
 app.post('/quotes/new',(req,res)=>{
+  console.log('saving stock');
   util.log(util.inspect(req.body));
   db.collection('quotes').save(req.body, (err,results) => {
-    if (err) return console.error(err);
+    if (err) {
+      console.error(err);
+      res.json({success: false});
+    }
     console.log("Saved to database");
-    res.redirect('/');
+    res.json({success: true});
+    // res.redirect('/');
   });
 });
 
 app.get('/quotes',(req,res)=>{
+  console.log('new GET REQUEST for quotes');
   let cursor = db.collection('quotes').find().toArray(function(err,results){
+    console.log('RESULTS: ');
     console.log(results);
     res.json({stocks: results});
   });
+});
+
+app.post('/quotes/delete',(req,res)=>{
+  util.log(util.inspect(req.body));
+  console.log('deleting quote');
+  let symbol = req.body.symbol;
+  console.log(symbol);
+  // Should be by ID
+  db.collection('quotes').deleteOne({symbol: symbol});
+  res.json({symbol: symbol});
+
 });
 
 app.post('/quotes',(req,res) => {

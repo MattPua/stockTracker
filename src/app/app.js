@@ -2,72 +2,108 @@ import ReactDOM from 'react-dom';
 import Header from './Components/Header';
 import Searchbar from './Components/Searchbar';
 import StocksList from './Components/StocksList';
+import Helper from './other/apphelper';
 import './other/main.scss';
+// Note: need this for materialize other wise won't work properly
+var $ = window.jQuery = require('jquery');
 require('materialize-css/sass/materialize.scss');
-require('materialize-css/bin/materialize.js');
+require('materialize-css/dist/js/materialize');
 class App extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      stocks: [],
+      stocks: []
     };
   }
-
-  shouldComponentUpdate(nextProps,nextState){
-    return true;
+  componentDidUpdate(prevProps,prevState){
   }
   componentDidMount(){
     this.getStocks();
   }
+  searchStock(stock){
+    let data = JSON.stringify({
+      stock: stock
+    });
+    let that = this;
+    let config = Helper.ajaxConfig('quotes','POST',data);
+    Helper.ajaxCall(this, config, this.addStock);
+  }
 
   getStocks(){
-    let that = this;
-    $.ajax({
-      url: 'quotes',
-      type: 'GET',
-      dataType: "json",
-      contentType: 'application/json',
-      success: function(results){
-        console.log(results);
-        let stocks = [];
-        for (let stock of results.stocks){
-          stocks.push(stock.symbol);
-        }
-        that.setState({stocks: stocks});
-      },
-      error: function(err){
-        console.error(err);
+    let config = Helper.ajaxConfig('quotes','GET',null);
+    Helper.ajaxCall(this,config, (data,that) =>{
+      let stocks = [];
+      for (let stock of data.stocks){
+        let newStock = {};
+        newStock[stock.symbol] = Helper.createObjectFromProperties(stock);
+        stocks.push(newStock);
+        newStock['symbol'] = stock.symbol;
       }
+      that.setState({stocks: stocks});
+      that.getUpdatedStockInfo();
     });
   }
-  addStock(obj){
+  removeStock(symbol){
+    let data = JSON.stringify({
+      symbol: symbol
+    });
+    let config = Helper.ajaxConfig('quotes/delete','POST',data);
+    Helper.ajaxCall(this,config,(result,that) =>{
+      let existingItems = that.state.stocks;
+      let foundItem = $.grep(existingItems,function(e){
+        return e.symbol == result.symbol;
+      });
+      foundItem = foundItem[0];
+      existingItems.splice(existingItems.indexOf(foundItem),1);
+      that.setState({stocks:existingItems});
+      Materialize.toast('Removed ' + symbol, 4000);
+    });
+  }
+
+  addStock(obj,that){
     let details = obj.data;
     if (details.indexOf('N/A')>=0) return;
     let stock = details[0];
-    let symbol = stock.symbol;
-    let name = stock.name;
-    if (this.state.stocks.indexOf(symbol)>=0) return;
-    let existingStocks = this.state.stocks.slice(0);
-    existingStocks.push(symbol);
-    this.setState({stocks: existingStocks});
-
+    for (let s of that.state.stocks)
+      if (s[stock.symbol] != undefined) return
+    
     let data = JSON.stringify({
-      symbol: symbol,
-      name: name,
+      symbol: stock.symbol,
+      name: stock.name,
     });
-    let that = this;
-    $.ajax({
-      url: 'quotes/new',
-      type: 'POST',
-      dataType: "json",
-      data:data,
-      contentType: 'application/json',
-      success: function(result){
-        console.log(result);
-      },
-      error: function(err){
-        console.error(err);
+    let config = Helper.ajaxConfig('quotes/new','POST',data);
+    Helper.ajaxCall(this,config,(result)=>{
+      Materialize.toast('Added ' + stock.name, 4000);
+      that.getStocks();
+    });
+  }
+  getUpdatedStockInfo(){
+    // TODO:  move this to app.js
+    let savedStocks = this.state.stocks;
+    let stock = '';
+    for (let i =0;i <savedStocks.length;i++){
+      console.log(savedStocks[i]);
+      stock+=savedStocks[i]['symbol'];
+      if (i!=savedStocks.length - 1)stock+="+";
+    }
+    let data = JSON.stringify({
+      stock: stock
+    });
+    let config = Helper.ajaxConfig('quotes','POST',data);
+    Helper.ajaxCall(this,config, (data,that) =>{
+      let existingStocks = that.state.stocks;
+      let updatedStocks = [];
+      // TODO: THIS IS HORRENDOUS
+      for (let stock of data.data){
+        for (let s of existingStocks){
+          if (s['symbol'] == stock.symbol){
+            let updatedStock = {symbol: stock.symbol};
+            updatedStock[stock.symbol] = $.extend({},stock,s[stock.symbol]);
+            updatedStocks.push(updatedStock); 
+          }
+        }
       }
+      that.setState({stocks: updatedStocks});
     });
   }
 
@@ -75,8 +111,8 @@ class App extends React.Component{
     return (
       <div>
         <Header/>
-        <Searchbar addStock={this.addStock.bind(this)}/>
-        <StocksList stocks={this.state.stocks}/>
+        <Searchbar searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
+        <StocksList stocks={this.state.stocks} removeStock={this.removeStock.bind(this)}/>
       </div>
     );
   }

@@ -2,44 +2,19 @@ import StockListItem from './StockListItem';
 class StocksList extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
-      items: [],
-    };
   }
-  componentDidUpdate(prevProps,prevState){
-    if (prevProps.stocks!= this.props.stocks)
-      this.getUpdatedStockInfo();
-  }
-  getUpdatedStockInfo(){
-    let stock = '';
-    for (let i =0;i <this.props.stocks.length;i++){
-      stock+=this.props.stocks[i];
-      if (i!=this.props.stocks.length - 1)stock+="+";
+  getStockListItems(){
+    let stockListItems = [];
+    for (let stock of this.props.stocks){
+      stock = stock[stock.symbol];
+      console.log(stock);
+      stockListItems.push(
+        <StockListItem name={stock.name} symbol={stock.symbol} ask={stock.bid} bid={stock.bid} removeStock={this.props.removeStock}/>
+      );
     }
-    let data = JSON.stringify({
-      stock: stock
-    });
-    let that = this;
-    $.ajax({
-      url: 'quotes',
-      type: 'POST',
-      dataType: "json",
-      data:data,
-      contentType: 'application/json',
-      success: function(result){
-        let stocks=[];
-        for (let stock of result.data){
-          let newStock = <StockListItem name={stock.name} symbol={stock.symbol} ask={stock.bid} bid={stock.bid}/>;
-          stocks.push(newStock);
-        }
-        that.setState({items: stocks});
-      },
-      error: function(err){
-        console.error(err);
-      }
-    });
-  }
 
+    return stockListItems;
+  }
 
   render(){
     return(
@@ -51,10 +26,11 @@ class StocksList extends React.Component{
               <th>Symbol</th>
               <th>Ask</th>
               <th>Bid</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.items}
+            {this.getStockListItems()}
           </tbody>
         </table>
       </div>

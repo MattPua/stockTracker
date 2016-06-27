@@ -7,6 +7,7 @@ class Searchbar extends React.Component{
   }
   onSubmit(event){
     event.preventDefault();
+    if (this.state.query == '') return;
     this.props.searchStock(this.state.query);
     this.setState({query: ''});
   }
@@ -15,13 +16,21 @@ class Searchbar extends React.Component{
   }
   render(){
     return(
-      <div className="searchbar-container">
-        <div className="searchbar">
-          <form onSubmit={this.onSubmit.bind(this)} action='/quotes' method='POST'>
-            <input type="text" placeholder="Stock Name or Symbol" value={this.state.query} onChange={this.onChange.bind(this)} name='stock'/>
-            <button type="submit">Get Quote</button>
-          </form>
-        </div>
+      <div className="searchbar-container row">
+        <div className={"searchbar " + this.props.className} >
+            <form onSubmit={this.onSubmit.bind(this)} action='/quotes' method='POST'>
+                <div className='input-field col s12'>
+                  <label for='stock' data-error='Symbol Does Not Exist' data-success='Symbol Found'>Symbol</label>
+                  <input className='validate' type="text" placeholder="Stock Name or Symbol" value={this.state.query} onChange={this.onChange.bind(this)} name='stock'/>
+                </div>
+                <div className='input-field col s12'>
+                  <button type="submit" className='btn waves-effect waves-light'>
+                    Search
+                        <i className="material-icons right">search</i>
+                  </button>
+                </div>
+            </form>
+          </div>
       </div>
     );
   }

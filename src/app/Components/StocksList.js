@@ -18,15 +18,14 @@ class StocksList extends React.Component{
 
   render(){
     return(
-      <div className="stocks-list-container">
-        <table className="stocks-list">
+      <div className="stocks-list-container row">
+        <table className={"stocks-list bordered highlight responsive-table " + this.props.className}>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Symbol</th>
-              <th>Ask</th>
-              <th>Bid</th>
-              <th>Actions</th>
+              <th data-field='name'>Name</th>
+              <th data-field='symbol'>Symbol</th>
+              <th data-field='ask/bid'>Ask/Bid</th>
+              <th data-field='actions'>Actions</th>
             </tr>
           </thead>
           <tbody>

@@ -1,5 +1,4 @@
 import ReactDOM from 'react-dom';
-import Header from './Components/Header';
 import Searchbar from './Components/Searchbar';
 import StocksList from './Components/StocksList';
 import Helper from './other/apphelper';
@@ -12,7 +11,8 @@ class App extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      stocks: []
+      stocks: [],
+      curr: 'CAD',
     };
   }
   componentDidUpdate(prevProps,prevState){
@@ -62,10 +62,10 @@ class App extends React.Component{
 
   addStock(obj,that){
     let details = obj.data;
-    if (details.indexOf('N/A')>=0) return;
     let stock = details[0];
+    if (stock.name =='N/A') {Materialize.toast('That Stock Symbol does not exist!',4000); return;}
     for (let s of that.state.stocks)
-      if (s[stock.symbol] != undefined) return
+      if (s[stock.symbol] != undefined) return;
     
     let data = JSON.stringify({
       symbol: stock.symbol,
@@ -109,10 +109,9 @@ class App extends React.Component{
 
   render(){
     return (
-      <div>
-        <Header/>
-        <Searchbar searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
-        <StocksList stocks={this.state.stocks} removeStock={this.removeStock.bind(this)}/>
+      <div className=''>
+        <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
+        <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)}/>
       </div>
     );
   }

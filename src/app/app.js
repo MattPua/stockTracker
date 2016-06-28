@@ -1,8 +1,11 @@
 import ReactDOM from 'react-dom';
 import Searchbar from './Components/Searchbar';
 import StocksList from './Components/StocksList';
+import SummaryBox from './Components/SummaryBox';
+import Header from './Components/Header';
 import Helper from './other/apphelper';
 import './other/main.scss';
+import moment from 'moment';
 // Note: need this for materialize other wise won't work properly
 var $ = window.jQuery = require('jquery');
 require('materialize-css/sass/materialize.scss');
@@ -13,6 +16,7 @@ class App extends React.Component{
     this.state = {
       stocks: [],
       curr: 'CAD',
+      lastUpdateTime: moment(),
     };
   }
   componentDidUpdate(prevProps,prevState){
@@ -82,7 +86,6 @@ class App extends React.Component{
     let savedStocks = this.state.stocks;
     let stock = '';
     for (let i =0;i <savedStocks.length;i++){
-      console.log(savedStocks[i]);
       stock+=savedStocks[i]['symbol'];
       if (i!=savedStocks.length - 1)stock+="+";
     }
@@ -103,18 +106,22 @@ class App extends React.Component{
           }
         }
       }
-      that.setState({stocks: updatedStocks});
+      console.log(updatedStocks);
+      that.setState({stocks: updatedStocks, lastUpdateTime: moment()});
     });
   }
 
   render(){
     return (
       <div className=''>
+        <Header className='col s12'/>
         <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
+        <SummaryBox className='col s12' refreshList={this.getStocks.bind(this)} lastUpdateTime={this.state.lastUpdateTime}/>
         <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)}/>
       </div>
     );
   }
 }
+window.moment = moment;
 
 ReactDOM.render(<App/>, document.getElementById('app'));

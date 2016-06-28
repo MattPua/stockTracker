@@ -3,13 +3,17 @@ class StocksList extends React.Component{
   constructor(props){
     super(props);
   }
-  getStockListItems(){
+  getStockListItems(type=''){
     let stockListItems = [];
     for (let stock of this.props.stocks){
       stock = stock[stock.symbol];
       console.log(stock);
       stockListItems.push(
-        <StockListItem name={stock.name} symbol={stock.symbol} ask={stock.bid} bid={stock.bid} removeStock={this.props.removeStock}/>
+        <StockListItem 
+          name={stock.name} symbol={stock.symbol} ask={stock.bid} 
+          bid={stock.bid} removeStock={this.props.removeStock} type={type} 
+          change={stock.change} dayRange={stock.dayRange}
+        />
       );
     }
 
@@ -19,19 +23,29 @@ class StocksList extends React.Component{
   render(){
     return(
       <div className="stocks-list-container row">
-        <table className={"stocks-list bordered highlight responsive-table " + this.props.className}>
-          <thead>
-            <tr>
-              <th data-field='name'>Name</th>
-              <th data-field='symbol'>Symbol</th>
-              <th data-field='ask/bid'>Ask/Bid</th>
-              <th data-field='actions'>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.getStockListItems()}
-          </tbody>
-        </table>
+        <div className={"stocks-list hide-on-small-only " + this.props.className}>
+          <table className={"bordered highlight responsive-table"}>
+            <thead>
+              <tr>
+                <th data-field='name'>Name</th>
+                <th data-field='symbol'>Symbol</th>
+                <th data-field='ask'>Ask</th>
+                <th data-field='bid'>Bid</th>
+                <th data-field='change'>Change</th>
+                <th data-field='dayRange'>Day Range</th>
+                <th data-field='actions'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.getStockListItems()}
+            </tbody>
+          </table>
+        </div>
+        <div className={'stocks-list hide-on-med-and-up ' + this.props.className}>
+          <div className='row'>
+            {this.getStockListItems('mobile')}
+          </div>
+        </div>
       </div>
     );
   }

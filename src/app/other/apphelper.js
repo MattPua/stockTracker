@@ -50,6 +50,13 @@ class AppHelper{
     return obj;
   }
 
+  static getMomentFormat(type='short'){
+    if (type =='short')
+      return 'MMMM Do, h:mm:ss a';
+    else 
+      return 'dddd, MMMM Do YYYY, h:mm:ss a';
+  }
+
 }
 
 export default AppHelper;

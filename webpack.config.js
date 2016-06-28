@@ -82,10 +82,12 @@ const config = {
         sourcemap: false
       })*/
   ],
-  // Some modules might use their own jquery. Use this to resolve other jquery into mine
   resolve: {
     alias: {
+      // Some modules might use their own jquery. Use this to resolve other jquery into mine
       'jquery': path.join(__dirname, 'node_modules/jquery/dist/jquery'),
+      // Needed this to get momentjs to work
+      // moment: path.join(__dirname, "node_modules/momentjs/moment.js")
     }
   }
 };

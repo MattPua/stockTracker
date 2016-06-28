@@ -91,7 +91,7 @@ app.post('/quotes/delete',(req,res)=>{
 app.post('/quotes',(req,res) => {
   util.log(util.inspect(req.body));
 
-  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snab', (error,response,body) =>{
+  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcm', (error,response,body) =>{
     if (!error && response.statusCode == 200) {
       console.log(body);
       let stocksNoFormat = body.split('\n');
@@ -110,6 +110,8 @@ app.post('/quotes',(req,res) => {
           else if (i==1) key='name';
           else if (i==2) key = 'ask';
           else if (i==3) key ='bid';
+          else if (i==4) key ='change';
+          else if (i==5) key = 'dayRange';
           stock[key] = value;
         }
         if (Object.keys(stock).length)

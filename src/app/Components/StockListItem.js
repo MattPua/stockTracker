@@ -21,9 +21,10 @@ class StockListItem extends React.Component{
     let dayRange = this.props.dayRange.split(' ');
     let parsedDayRange = "$"+dayRange[0] + ' - '+ dayRange[2];
     return[
+    <td>${this.props.price}</td>,
     <td>${this.props.ask}</td>,
     <td>${this.props.bid}</td>,
-    <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text darken-3' : 'hide-on-med-and-up red-text darken-1'}>{parsedChangeAmount} [{changePercent}%]</td>,
+    <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text darken-3' : 'hide-on-med-and-up red-text darken-1'}>{parsedChangeAmount} [ {changePercent}% ]</td>,
     <td className={changeAmount > 0  ? 'hide-on-small-only green-text darken-3' : 'hide-on-small-only red-text darken-1'}>{parsedChangeAmount}<br/>{changePercent}%</td>,
     <td>{parsedDayRange}</td>
     ];
@@ -50,6 +51,7 @@ class StockListItem extends React.Component{
                  <table className={"bordered highlight responsive-table"}>
                    <thead>
                      <tr>
+                       <th data-field='price'>Price</th>
                        <th data-field='ask'>Ask/Bid</th>
                        <th data-field='bid'>Bid</th>
                        <th data-field='change'>Change</th>

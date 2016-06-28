@@ -68,8 +68,8 @@ app.post('/quotes/new',(req,res)=>{
   });
 });
 
+// GetStocks()
 app.get('/quotes',(req,res)=>{
-  console.log('new GET REQUEST for quotes');
   let cursor = db.collection('quotes').find().toArray(function(err,results){
     console.log('RESULTS: ');
     console.log(results);
@@ -77,6 +77,8 @@ app.get('/quotes',(req,res)=>{
   });
 });
 
+
+// RemoveStock()
 app.post('/quotes/delete',(req,res)=>{
   util.log(util.inspect(req.body));
   console.log('deleting quote');
@@ -88,12 +90,13 @@ app.post('/quotes/delete',(req,res)=>{
 
 });
 
+
+// GetUpdatedStockInfo()
 app.post('/quotes',(req,res) => {
   util.log(util.inspect(req.body));
 
-  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcm', (error,response,body) =>{
+  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcml1', (error,response,body) =>{
     if (!error && response.statusCode == 200) {
-      console.log(body);
       let stocksNoFormat = body.split('\n');
       console.log(stocksNoFormat);
       let stocksFormatted = [];
@@ -108,10 +111,20 @@ app.post('/quotes',(req,res) => {
           value = value.replace(/"/g,'');
           if (i == 0) key = 'symbol';
           else if (i==1) key='name';
-          else if (i==2) key = 'ask';
-          else if (i==3) key ='bid';
+          else if (i==2) {
+            key = 'ask';
+            value = parseFloat(value).toFixed(2);
+          }
+          else if (i==3) {
+            key ='bid';
+            value = parseFloat(value).toFixed(2);
+          }
           else if (i==4) key ='change';
           else if (i==5) key = 'dayRange';
+          else if (i==6) {
+            key = 'price';
+            value = parseFloat(value).toFixed(2);
+          }
           stock[key] = value;
         }
         if (Object.keys(stock).length)

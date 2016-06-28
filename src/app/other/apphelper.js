@@ -57,6 +57,29 @@ class AppHelper{
       return 'dddd, MMMM Do YYYY, h:mm:ss a';
   }
 
+  static dynamicSort(property,direction='ASC'){
+    let sortOrder = 1;
+    if (direction =='DESC') sortOrder = -1;
+    return function(a,b){
+      var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+      return result * sortOrder;
+    }
+  }
+
+  static dynamicNestedSort(property,direction=1){
+    let listOfNumProps = ['price','ask','bid'];
+
+    return function(a,b){
+      let aValue = a[a.symbol][property];
+      let bValue = b[b.symbol][property];
+      if (listOfNumProps.indexOf(property) >=0 ) {
+        aValue = parseFloat(aValue);
+        bValue = parseFloat(bValue);
+      }
+      var result = (aValue < bValue) ? -1 : (aValue > bValue) ? 1 : 0;
+      return result * direction;
+    }
+  }
 }
 
 export default AppHelper;

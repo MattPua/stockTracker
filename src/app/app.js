@@ -17,6 +17,8 @@ class App extends React.Component{
       stocks: [],
       curr: 'CAD',
       lastUpdateTime: moment(),
+      sortDirection: 1,
+      sortBy: 'name',
     };
   }
   componentDidUpdate(prevProps,prevState){
@@ -31,6 +33,17 @@ class App extends React.Component{
     let that = this;
     let config = Helper.ajaxConfig('quotes','POST',data);
     Helper.ajaxCall(this, config, this.addStock);
+  }
+  componentDidUpdate(prevProps,prevState){
+    if (prevState.sortBy != this.state.sortBy || prevState.sortDirection != this.state.sortDirection)
+      this.getUpdatedStockInfo();
+  }
+
+  changeSortBy(property,direction){
+    //TODO: Make sure its a good property to sort by
+    let updatedStocks = this.state.stocks.slice(0);
+    updatedStocks = updatedStocks.sort(Helper.dynamicNestedSort(property,direction));
+    this.setState({stocks: updatedStocks,sortBy: property,sortDirection: direction});
   }
 
   getStocks(){
@@ -106,7 +119,7 @@ class App extends React.Component{
           }
         }
       }
-      console.log(updatedStocks);
+      updatedStocks.sort(Helper.dynamicNestedSort(that.state.sortBy,that.state.sortDirection));
       that.setState({stocks: updatedStocks, lastUpdateTime: moment()});
     });
   }
@@ -117,7 +130,7 @@ class App extends React.Component{
         <Header className='col s12'/>
         <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
         <SummaryBox className='col s12' refreshList={this.getStocks.bind(this)} lastUpdateTime={this.state.lastUpdateTime}/>
-        <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)}/>
+        <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection}/>
       </div>
     );
   }

@@ -39,10 +39,11 @@ class StocksList extends React.Component{
                 <th data-field='name'>Name<i value='name' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='symbol'>Symbol<i value='symbol' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='price'>Price<i value='price' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
+                <th data-field='targetPrice'>Target Price<i value='targetPrice' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='ask'>Ask<i value='ask' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='bid'>Bid<i value='bid' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='change'>Change<i value='change' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
-                <th data-field='dayRange'>Day Range></th>
+                <th data-field='dayRange'>Day Range</th>
                 <th data-field='actions'>Actions</th>
               </tr>
             </thead>

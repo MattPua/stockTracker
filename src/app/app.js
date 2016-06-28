@@ -4,6 +4,7 @@ import StocksList from './Components/StocksList';
 import SummaryBox from './Components/SummaryBox';
 import Header from './Components/Header';
 import Helper from './other/apphelper';
+import FixedItems from './Components/FixedItems';
 import './other/main.scss';
 import moment from 'moment';
 // Note: need this for materialize other wise won't work properly
@@ -128,8 +129,9 @@ class App extends React.Component{
     return (
       <div className=''>
         <Header className='col s12'/>
+        <FixedItems refreshList={this.getStocks.bind(this)}/>
         <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
-        <SummaryBox className='col s12' refreshList={this.getStocks.bind(this)} lastUpdateTime={this.state.lastUpdateTime}/>
+        <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime}/>
         <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection}/>
       </div>
     );

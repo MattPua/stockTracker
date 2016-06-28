@@ -15,20 +15,14 @@ class SummaryBox extends React.Component{
       <div className='summary-box-container row'>
         <div className={'summary-box ' + this.props.className}>
           <div className='row'>
-            <span className='col s12 m4'>
+            <span className='col s12 m6'>
               Last Updated: {lastUpdateTime}
             </span>
-            <span className='col s12 m4'>
-              
-            </span>
-            <span className='col s12 m4'>
-              <button className='btn waves-effect waves-light' type='button' onClick={this.onClick.bind(this)}>
-                <i className='material-icons tooltipped' data-position='top' data-delay='50' data-tooltip='Refresh'>refresh</i>
-              </button>
-            </span>
+            <span className='col s12 m6'></span>
           </div>
         </div>
       </div>
+
     );
   }
 

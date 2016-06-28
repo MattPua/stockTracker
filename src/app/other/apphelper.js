@@ -7,6 +7,15 @@ class AppHelper{
     return word[0].toUpperCase() + word.substring(1,word.length);
   }
 
+  static toUpperFirstLetterOnly(sentence){
+    let words = [];
+    for (let word of sentence.split(' ')){
+      word = word.toLowerCase() + " ";
+      words.push(AppHelper.toUpperOne(word));
+    }
+    return words;
+  }
+
   static convertArrayFromFirebase(item,key){
     let array = [];
     for (let j in item[key])

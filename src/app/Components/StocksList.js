@@ -10,7 +10,7 @@ class StocksList extends React.Component{
       stock = stock[stock.symbol];
       stockListItems.push(
         <StockListItem 
-          name={stock.name} symbol={stock.symbol} ask={parseFloat(stock.bid).toFixed(2)} 
+          name={stock.name} symbol={stock.symbol} ask={parseFloat(stock.ask).toFixed(2)} 
           bid={parseFloat(stock.bid).toFixed(2)} removeStock={this.props.removeStock} type={type} 
           change={stock.change} dayRange={stock.dayRange} price={parseFloat(stock.price).toFixed(2)}
         />

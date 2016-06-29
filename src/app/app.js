@@ -40,6 +40,17 @@ class App extends React.Component{
       this.getUpdatedStockInfo();
   }
 
+  editStock(symbol,properties){
+    console.info(symbol,properties);
+    let data = JSON.stringify({properties: properties});
+    //TODO: Should be ID
+    let config = Helper.ajaxConfig('quotes/'+symbol,'POST',data);
+    //TODO: Really inefficient process here
+    Helper.ajaxCall(this,config,(data,that) =>{
+      that.getStocks();
+    });
+  }
+
   changeSortBy(property,direction){
     //TODO: Make sure its a good property to sort by
     let updatedStocks = this.state.stocks.slice(0);
@@ -53,28 +64,25 @@ class App extends React.Component{
       let stocks = [];
       for (let stock of data.stocks){
         let newStock = {};
-        newStock[stock.symbol] = Helper.createObjectFromProperties(stock);
+        newStock = Helper.createObjectFromProperties(stock);
         stocks.push(newStock);
-        newStock['symbol'] = stock.symbol;
+        // newStock['symbol'] = stock.symbol;
       }
       that.setState({stocks: stocks});
       that.getUpdatedStockInfo();
     });
   }
-  removeStock(symbol){
-    let data = JSON.stringify({
-      symbol: symbol
-    });
-    let config = Helper.ajaxConfig('quotes/delete','POST',data);
+  removeStock(id){
+    let config = Helper.ajaxConfig('quotes/'+id+'/delete','POST',{});
     Helper.ajaxCall(this,config,(result,that) =>{
       let existingItems = that.state.stocks;
       let foundItem = $.grep(existingItems,function(e){
-        return e.symbol == result.symbol;
+        return e._id == result.id;
       });
       foundItem = foundItem[0];
       existingItems.splice(existingItems.indexOf(foundItem),1);
       that.setState({stocks:existingItems});
-      Materialize.toast('Removed ' + symbol, 4000);
+      Materialize.toast('Removed ' + foundItem.symbol, 4000);
     });
   }
 
@@ -88,6 +96,8 @@ class App extends React.Component{
     let data = JSON.stringify({
       symbol: stock.symbol,
       name: stock.name,
+      targetPrice: 0.00,
+      sharesOwned: 0
     });
     let config = Helper.ajaxConfig('quotes/new','POST',data);
     Helper.ajaxCall(this,config,(result)=>{
@@ -98,13 +108,13 @@ class App extends React.Component{
   getUpdatedStockInfo(){
     // TODO:  move this to app.js
     let savedStocks = this.state.stocks;
-    let stock = '';
+    let query = '';
     for (let i =0;i <savedStocks.length;i++){
-      stock+=savedStocks[i]['symbol'];
-      if (i!=savedStocks.length - 1)stock+="+";
+      query+=savedStocks[i]['symbol'];
+      if (i!=savedStocks.length - 1)query+="+";
     }
     let data = JSON.stringify({
-      stock: stock
+      stock: query
     });
     let config = Helper.ajaxConfig('quotes','POST',data);
     Helper.ajaxCall(this,config, (data,that) =>{
@@ -114,13 +124,13 @@ class App extends React.Component{
       for (let stock of data.data){
         for (let s of existingStocks){
           if (s['symbol'] == stock.symbol){
-            let updatedStock = {symbol: stock.symbol};
-            updatedStock[stock.symbol] = $.extend({},stock,s[stock.symbol]);
+            // let updatedStock = {symbol: stock.symbol};
+            let updatedStock = $.extend({},stock,s);
             updatedStocks.push(updatedStock); 
           }
         }
       }
-      updatedStocks.sort(Helper.dynamicNestedSort(that.state.sortBy,that.state.sortDirection));
+      updatedStocks.sort(Helper.dynamicSort(that.state.sortBy,that.state.sortDirection));
       that.setState({stocks: updatedStocks, lastUpdateTime: moment()});
     });
   }
@@ -132,7 +142,7 @@ class App extends React.Component{
         <FixedItems refreshList={this.getStocks.bind(this)}/>
         <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
         <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime}/>
-        <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection}/>
+        <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
       </div>
     );
   }

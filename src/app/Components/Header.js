@@ -7,7 +7,7 @@ export default class Header extends React.Component{
     return(
       <div className='header-container row'>
         <div className={"" + this.props.className}>
-          <h1>Stock Tracker</h1>
+          <h1>Portfolio Tracker</h1>
         </div>
       </div>
     );

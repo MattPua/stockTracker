@@ -6,49 +6,108 @@ class StockListItem extends React.Component{
     this.state = {
       editMode: false,
       targetPrice: this.props.targetPrice,
+      sharesOwned: this.props.sharesOwned,
     };
   }
 
   componentWillReceiveProps(nextProps){
     this.setState({
       targetPrice: this.props.targetPrice,
+      sharesOwned: this.props.sharesOwned,
     });
+  }
+  componentWillUnmount(){
+    $(this.refs.item).find(".tooltipped").tooltip('remove');
+    $(this.refs.itemMobile).find(".tooltipped").tooltip('remove');
   }
 
   onDelete(){
-    this.props.removeStock(this.props.symbol);
+    this.props.removeStock(this.props._id);
   }
 
   onEdit(){
     this.setState({editMode: !this.state.editMode});
   }
+
   componentDidMount(){
-    $(document).ready( () =>{
-      $(this.refs.item).find(".tooltipped").tooltip({});
-      $(this.refs.itemMobile).find(".tooltipped").tooltip({});
-    });
+    $(this.refs.item).find(".tooltipped").tooltip({});
+    $(this.refs.itemMobile).find(".tooltipped").tooltip({});
   }
   onTargetPriceChange(event){
+    let value = event.target.value;
+    value = value.replace(/[^0-9.]/, "");
+    //TODO: Prevent multiple dots
+    //TODO: Ensure if there's a dot,there's at least one number after it
+
     // Only do something if they save i guess
     this.setState({
-      targetPrice: event.target.value,
+      targetPrice: value,
     });
   }
 
+  onSharesOwnedChange(event){
+    let value = event.target.value;
+    value = value.replace(/[^0-9.]/, "");
+    //TODO: Prevent multiple dots
+    //TODO: Ensure if there's a dot,there's at least one number after it
+    this.setState({
+      sharesOwned: value,
+    });
+  }
+
+  saveChanges(){
+    this.onEdit();
+    if (parseFloat(this.props.targetPrice).toFixed(2) == parseFloat(this.state.targetPrice).toFixed(2) && 
+      parseInt(this.props.sharesOwned) == parseInt(this.state.sharesOwned)) return;
+    // TODO: Should be ID instead
+    this.props.editStock(this.props._id,this.state);
+  }
+
+  cancelChanges(){
+    this.setState({
+      targetPrice: this.props.targetPrice,
+      sharesOwned: this.props.sharesOwned,
+    });
+    this.onEdit();
+  }
+
+  getEditableParts(){
+    let content = null;
+    if (this.state.editMode){
+      return[
+        <td>
+          <label for='targetPrice'  className='hide-on-small-only'>Target Price</label>
+          <input type='text' value={this.state.targetPrice}  placeholder='Target Price' name='targetPrice' onChange={this.onTargetPriceChange.bind(this)}/>
+        </td>,
+        <td>  
+          <label for='sharesOwned' className='hide-on-small-only'>Shares Owned</label>
+          <input type='text' value={this.state.sharesOwned} placeholder='Shares Owned' name='sharesOwned' onChange={this.onSharesOwnedChange.bind(this)}/>
+        </td>
+      ];
+    }
+    else{
+      return[
+        <td>
+          <span >${this.state.targetPrice}</span>
+        </td>,
+        <td>
+          <span >{this.state.sharesOwned}</span>
+        </td>
+      ];
+    }
+  }
+
   getValues(){
-    let change = this.props.change.split(' ');
-    let changeAmount = parseFloat(change[0]);
+    let change             = this.props.change.split(' ');
+    let changeAmount       = parseFloat(change[0]).toFixed(2);
     let parsedChangeAmount = (changeAmount > 0 ? '$' : '-$') + Math.abs(changeAmount);
-    let changePercent = parseFloat(change[2].replace('%',''));
-    let dayRange = this.props.dayRange.split(' ');
-    let parsedDayRange = "$"+dayRange[0] + ' - '+ dayRange[2];
+    let changePercent      = parseFloat(change[2].replace('%','')).toFixed(2);
+    let dayRange           = this.props.dayRange.split(' ');
+    let parsedDayRange     = "$"+dayRange[0] + ' - '+ dayRange[2];
+    let name               = this.props.name;
     return[
       <td>${this.props.price}</td>,
-      <td>
-        <span className={this.state.editMode ? 'hide' : ''}>${this.state.targetPrice}</span>
-        <label for='targetPrice' className={this.state.editMode ? '' : 'hide'}>Target Price</label>
-        <input type='text' value={this.state.targetPrice} className={this.state.editMode ? '' : 'hide'} placeholder='Target Price' name='targetPrice' onChange={this.onTargetPriceChange.bind(this)}/>
-      </td>,
+      this.getEditableParts(),
       <td>${this.props.ask}</td>,
       <td>${this.props.bid}</td>,
       <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text darken-3' : 'hide-on-med-and-up red-text darken-1'}>{parsedChangeAmount} [ {changePercent}% ]</td>,
@@ -57,12 +116,19 @@ class StockListItem extends React.Component{
     ];
   }
   getActions(){
+    let name = this.props.name;
     return[
-      <button className='btn waves-effect waves-light' type='button' onClick={this.onEdit.bind(this)}>
-        <i className='material-icons tooltipped' data-position='top' data-delay='50' data-tooltip={'Edit ' + Helper.toUpperFirstLetterOnly(this.props.name)}>edit</i>
+      <button className={'btn waves-effect waves-light ' + (this.state.editMode? 'hide': '')} type='button' onClick={this.onEdit.bind(this)}>
+        <i className='material-icons tooltipped' data-position='top' data-delay='50' data-tooltip={'Edit ' + name}>edit</i>
       </button>,
-      <button className='btn waves-effect waves-light' type='button' onClick={this.onDelete.bind(this)}>
-        <i className='material-icons tooltipped' data-position='top' data-delay='50' data-tooltip={'Remove ' + Helper.toUpperFirstLetterOnly(this.props.name)}>delete</i>
+      <button className={'btn waves-effect waves-light ' + (this.state.editMode? '': 'hide')} type='button' onClick={this.saveChanges.bind(this)}>
+        <i className='material-icons tooltipped' data-position='top' data-delay='50' data-tooltip={'Save Changes'}>save</i>
+      </button>,
+      <button className={'btn waves-effect waves-light ' + (this.state.editMode? '': 'hide')} type='button' onClick={this.cancelChanges.bind(this)}>
+        <i className='material-icons tooltipped' data-position='top' data-delay='50' data-tooltip={'Cancel Changes'}>cancel</i>
+      </button>,
+      <button className={'btn waves-effect waves-light ' + (this.state.editMode? 'hide': '')} type='button' onClick={this.onDelete.bind(this)}>
+        <i className='material-icons tooltipped' data-position='top' data-delay='50' data-tooltip={'Remove ' + name}>delete</i>
       </button>
     ];
   }
@@ -83,6 +149,7 @@ class StockListItem extends React.Component{
                      <tr>
                        <th data-field='price'>Price</th>
                        <th data-field='targetPrice'>Target Price</th>
+                       <th data-field='sharesOwned'>Shares Owned</th>
                        <th data-field='ask'>Ask/Bid</th>
                        <th data-field='bid'>Bid</th>
                        <th data-field='change'>Change</th>
@@ -139,7 +206,9 @@ StockListItem.defaultProps = {
   change: '0 - %0',
   dayRange: '0 - 0',
   targetPrice: 0.00,
+  sharesOwned: 0,
   price: 0.00,
+  _id: '',
 };
 StockListItem.propTypes = {};
 

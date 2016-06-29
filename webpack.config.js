@@ -7,7 +7,7 @@ var BUILD_DIR = path.resolve(__dirname, './build');
 var APP_DIR = path.resolve(__dirname, 'src/app');
 
 const config = {
-  /*devtool: 'eval-source-map',*/
+  devtool: 'inline-source-map',
   // Add entry to connect hot loading middleware from page
   entry: [
     'webpack-hot-middleware/client',

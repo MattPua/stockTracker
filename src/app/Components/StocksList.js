@@ -7,12 +7,13 @@ class StocksList extends React.Component{
   getStockListItems(type=''){
     let stockListItems = [];
     for (let stock of this.props.stocks){
-      stock = stock[stock.symbol];
       stockListItems.push(
         <StockListItem 
-          name={stock.name} symbol={stock.symbol} ask={parseFloat(stock.ask).toFixed(2)} 
-          bid={parseFloat(stock.bid).toFixed(2)} removeStock={this.props.removeStock} type={type} 
-          change={stock.change} dayRange={stock.dayRange} price={parseFloat(stock.price).toFixed(2)}
+          name={stock.name} symbol={stock.symbol} ask={stock.ask} 
+          bid={stock.bid} removeStock={this.props.removeStock} type={type} 
+          change={stock.change} dayRange={stock.dayRange} price={stock.price}
+          editStock={this.props.editStock} sharesOwned={stock.sharesOwned} targetPrice={stock.targetPrice}
+          _id={stock._id} key={stock._id}
         />
       );
     }
@@ -40,6 +41,7 @@ class StocksList extends React.Component{
                 <th data-field='symbol'>Symbol<i value='symbol' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='price'>Price<i value='price' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='targetPrice'>Target Price<i value='targetPrice' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
+                <th data-field='sharesOwned'>Shares Owned<i value='sharesOwned' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='ask'>Ask<i value='ask' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='bid'>Bid<i value='bid' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
                 <th data-field='change'>Change<i value='change' className='material-icons' onClick={this.onClick.bind(this)}>swap_vert</i></th>
@@ -63,9 +65,9 @@ class StocksList extends React.Component{
 }
 
 StocksList.defaultProps = {
-  stocks: [],
-  sortDirection: 1,
-  sortBy: '',
+  stocks        : [],
+  sortDirection : 1,
+  sortBy        : '',
 };
 StocksList.propTypes = {};
 

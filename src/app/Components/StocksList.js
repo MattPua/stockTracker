@@ -1,22 +1,20 @@
 import StockListItem from './StockListItem';
 import Helper from '../other/apphelper';
+import ReactDOM from 'react-dom';
 import './StocksList.scss';
 class StocksList extends React.Component{
   constructor(props){
     super(props);
   }
   componentDidMount(){
-    $(this.refs.dropdown).dropdown({
-        inDuration: 300,
-        outDuration: 225,
-        constrain_width: false, // Does not change width of dropdown to that of the activator
-        hover: true, // Activate on hover
-        gutter: 0, // Spacing from edge
-        belowOrigin: true, // Displays dropdown below the button
-        alignment: 'left' // Displays dropdown with edge aligned to the left of button
-      }
-    );
+    let that = this;
+    $(this.refs.select).material_select();
+    // Need this Hack because materializecss changes select into a input/ul and you can't attach the onClick's normally through React
+    $(this.refs.mobileSortBy.querySelectorAll('ul.select-dropdown li')).on('click',(event)=>{
+      this.onClick(null,this.refs.mobileSortBy.querySelector('input.select-dropdown').value);
+    });
   }
+
   getStockListItems(type=''){
     let stockListItems = [];
     for (let stock of this.props.stocks){
@@ -32,9 +30,10 @@ class StocksList extends React.Component{
     }
     return stockListItems;
   }
-  onClick(event){
-    console.log('test');
-    let prop = event.target.value;
+  onClick(event,value=''){
+    let prop = null;
+    // Need this for MaterializeCSS Select changes
+    prop = value = '' ? event.target.value : Helper.toLowerOne(value);
     let direction = this.props.sortDirection;
     if (prop != this.props.sortBy)
       direction = 1;
@@ -50,12 +49,7 @@ class StocksList extends React.Component{
     for (let item of properties){
       if (isForMobile)
         listItems.push(
-          <li>
-            <a href="#!" onClick={this.onClick.bind(this)} value={item} className={item == this.props.sortBy ? 'active' : ''}>
-              {Helper.toUpperOne(item)} 
-              <i className="material-icons"  >swap_vert</i>
-            </a>
-          </li>
+          <option value={item}>{Helper.toUpperOne(item)}</option>
         );
       else
         listItems.push(
@@ -63,11 +57,17 @@ class StocksList extends React.Component{
         );
     }
     if (isForMobile)
-      return(
-        <ul id='dropdown' className='dropdown-content'>
-          {listItems}
-        </ul>
-      );
+      return[
+        <form ref='mobileSortBy'>
+          <div className="input-field">
+            <select ref='select' defaultValue='name'>
+              <option value="" disabled>Sort By:</option>
+              {listItems}
+            </select>
+            <label>Sort By:</label>
+          </div>
+        </form>
+      ];
     else
       return[listItems];
   }
@@ -91,7 +91,6 @@ class StocksList extends React.Component{
         </div>
         <div className={'stocks-list hide-on-med-and-up ' + this.props.className}>
           <div className='row'>
-            <a className='dropdown-button btn' href='#' data-activates='dropdown' ref='dropdown'>Sort By:</a>
             {this.getPropertyNames(true)}
             {this.getStockListItems('mobile')}
           </div>

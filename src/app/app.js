@@ -52,6 +52,7 @@ class App extends React.Component{
   }
 
   changeSortBy(property,direction){
+    property = Helper.toLowerOne(property);
     //TODO: Make sure its a good property to sort by
     let updatedStocks = this.state.stocks.slice(0);
     updatedStocks = updatedStocks.sort(Helper.dynamicSort(property,direction));

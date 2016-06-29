@@ -7,6 +7,10 @@ class AppHelper{
     return word[0].toUpperCase() + word.substring(1,word.length);
   }
 
+  static toLowerOne(word){
+    return word[0].toLowerCase() + word.substring(1,word.length);
+  }
+
   static toUpperFirstLetterOnly(sentence){
     let words = [];
     for (let word of sentence.split(' ')){

@@ -5,6 +5,7 @@ import SummaryBox from './Components/SummaryBox';
 import Header from './Components/Header';
 import Helper from './other/apphelper';
 import FixedItems from './Components/FixedItems';
+import Footer from './Components/Footer';
 import './other/main.scss';
 import moment from 'moment';
 // Note: need this for materialize other wise won't work properly
@@ -52,7 +53,6 @@ class App extends React.Component{
   }
 
   changeSortBy(property,direction){
-    property = Helper.toLowerOne(property);
     //TODO: Make sure its a good property to sort by
     let updatedStocks = this.state.stocks.slice(0);
     updatedStocks = updatedStocks.sort(Helper.dynamicSort(property,direction));
@@ -138,13 +138,14 @@ class App extends React.Component{
 
   render(){
     return (
-      <div className=''>
+      <main className=''>
         <Header className='col s12'/>
         <FixedItems refreshList={this.getStocks.bind(this)}/>
         <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
         <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime}/>
         <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
-      </div>
+        <Footer/>
+      </main>
     );
   }
 }

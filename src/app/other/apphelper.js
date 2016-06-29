@@ -20,6 +20,14 @@ class AppHelper{
     return words;
   }
 
+  static getRoundedUnit(amount){
+    let val = parseInt(amount);
+    if (amount / 1000000 > 1) val = parseFloat(val/1000000).toFixed(1) + 'M';
+    else if (amount / 1000 > 1) val = parseFloat(val/100000).toFixed(1)+'k';
+    else val = parseFloat(val).toFixed(1);
+    return val;
+  }
+
   static convertArrayFromFirebase(item,key){
     let array = [];
     for (let j in item[key])
@@ -71,7 +79,7 @@ class AppHelper{
   }
 
   static dynamicSort(property,direction=1){
-    let listOfNumProps = ['price','ask','bid'];
+    let listOfNumProps = ['price','ask','bid','volume'];
 
     return function(a,b){
       let aValue = a[property];

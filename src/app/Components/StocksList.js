@@ -24,7 +24,7 @@ class StocksList extends React.Component{
           bid={stock.bid} removeStock={this.props.removeStock} type={type} 
           change={stock.change} dayRange={stock.dayRange} price={stock.price}
           editStock={this.props.editStock} sharesOwned={stock.sharesOwned} targetPrice={stock.targetPrice}
-          _id={stock._id} key={stock._id}
+          _id={stock._id} key={stock._id} volume={stock.volume}
         />
       );
     }
@@ -33,7 +33,7 @@ class StocksList extends React.Component{
   onClick(event,value=''){
     let prop = null;
     // Need this for MaterializeCSS Select changes
-    prop = value = '' ? event.target.value : Helper.toLowerOne(value);
+    prop = value == '' ? event.target.value : Helper.toLowerOne(value);
     let direction = this.props.sortDirection;
     if (prop != this.props.sortBy)
       direction = 1;
@@ -45,7 +45,7 @@ class StocksList extends React.Component{
 
   getPropertyNames(isForMobile){
     let listItems = [];
-    let properties = ['name','symbol','price','targetPrice','sharesOwned','ask','bid','change'];
+    let properties = ['name','symbol','price','targetPrice','sharesOwned','ask','bid','volume','change'];
     for (let item of properties){
       if (isForMobile)
         listItems.push(

@@ -142,7 +142,7 @@ app.post('/quotes/:id/delete',(req,res)=>{
 app.post('/quotes',(req,res) => {
   util.log(util.inspect(req.body));
 
-  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcml1', (error,response,body) =>{
+  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcml1v', (error,response,body) =>{
     if (!error && response.statusCode == 200) {
       let stocksNoFormat = body.split('\n');
       console.log(stocksNoFormat);
@@ -156,22 +156,14 @@ app.post('/quotes',(req,res) => {
           // TODO: Check this
           if (value == '') break;
           value = value.replace(/"/g,'');
-          if (i == 0) key = 'symbol';
-          else if (i==1) key='name';
-          else if (i==2) {
-            key = 'ask';
-            value = parseFloat(value).toFixed(2);
-          }
-          else if (i==3) {
-            key ='bid';
-            value = parseFloat(value).toFixed(2);
-          }
-          else if (i==4) key ='change';
-          else if (i==5) key = 'dayRange';
-          else if (i==6) {
-            key = 'price';
-            value = parseFloat(value).toFixed(2);
-          }
+          if (i      == 0) key = 'symbol';
+          else if (i ==1) key ='name';
+          else if (i ==2) key = 'ask';
+          else if (i ==3) key ='bid';
+          else if (i ==4) key ='change';
+          else if (i ==5) key = 'dayRange';
+          else if (i ==6) key = 'price';
+          else if (i ==7) key ='volume';
           stock[key] = value;
         }
         if (Object.keys(stock).length)

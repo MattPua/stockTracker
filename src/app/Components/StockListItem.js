@@ -97,21 +97,38 @@ class StockListItem extends React.Component{
     }
   }
 
+  getTableHeaders(){
+    let properties = ['price','targetPrice','sharesOwned','ask','bid','volume','change','dayRange'];
+    let th = [];
+    for (let p of properties){
+      th.push(
+        <th data-field={p}>{Helper.toUpperOne(p)}</th>
+      )
+    }
+    return(
+      <tr>
+        {th}
+      </tr>
+    );
+  }
+
   getValues(){
     let change             = this.props.change.split(' ');
-    let changeAmount       = parseFloat(change[0]).toFixed(2);
-    let parsedChangeAmount = (changeAmount > 0 ? '$' : '-$') + Math.abs(changeAmount);
+    let changeAmount       = parseFloat(change[0]);
+    let parsedChangeAmount = (changeAmount > 0 ? '$' : '-$') + Math.abs(changeAmount).toFixed(2);
     let changePercent      = parseFloat(change[2].replace('%','')).toFixed(2);
     let dayRange           = this.props.dayRange.split(' ');
     let parsedDayRange     = "$"+dayRange[0] + ' - '+ dayRange[2];
+    let volume             = Helper.getRoundedUnit(this.props.volume);
     let name               = this.props.name;
     return[
       <td>${this.props.price}</td>,
       this.getEditableParts(),
       <td>${this.props.ask}</td>,
       <td>${this.props.bid}</td>,
-      <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text darken-3' : 'hide-on-med-and-up red-text darken-1'}>{parsedChangeAmount} [ {changePercent}% ]</td>,
-      <td className={changeAmount > 0  ? 'hide-on-small-only green-text darken-3' : 'hide-on-small-only red-text darken-1'}>{parsedChangeAmount}<br/>{changePercent}%</td>,
+      <td>{volume}</td>,
+      <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedChangeAmount} [ {changePercent}% ]</td>,
+      <td className={changeAmount > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedChangeAmount}<br/>{changePercent}%</td>,
       <td>{parsedDayRange}</td>
     ];
   }
@@ -146,15 +163,7 @@ class StockListItem extends React.Component{
                <div className={"hide-on-med-and-up "}>
                  <table className={"bordered highlight responsive-table"}>
                    <thead>
-                     <tr>
-                       <th data-field='price'>Price</th>
-                       <th data-field='targetPrice'>Target Price</th>
-                       <th data-field='sharesOwned'>Shares Owned</th>
-                       <th data-field='ask'>Ask/Bid</th>
-                       <th data-field='bid'>Bid</th>
-                       <th data-field='change'>Change</th>
-                       <th data-field='dayRange'>Day Range</th>
-                     </tr>
+                    {this.getTableHeaders()}
                    </thead>
                    <tbody>
                     <tr>

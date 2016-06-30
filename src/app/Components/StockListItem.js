@@ -122,36 +122,68 @@ class StockListItem extends React.Component{
   getValues(){
     let properties = this.props.defaultProperties;
     let td = [];
+    let targetPrice = parseFloat(this.props['targetPrice']);
+    let redTextClassName = ' red-text text-darken-1';
+    let greenTextClassName = ' green-text text-darken-3';
     for (let p of properties){
-      td.push(
-        <td>{this.props[p]}</td>
-      );
+      let val = this.props[p];
+      let returnVal = null;
+      let hideMed = 'hide-on-med-and-up ';
+      let hideSmall = 'hide-on-small-only ';
+      if (p == 'volume') val = Helper.getRoundedUnit(val);
+      else if (p =='change' || p == 'priceChange' || p =='profit'){
+        let amount=0,percent='',parsedAmount='$0.00',parsedPercent='0.00%';
+
+        if (p == 'change'){
+          amount = parseFloat(val.split(' ')[0]);
+          parsedPercent = val.split(' ')[2];
+          parsedAmount = Helper.getParsedValue(amount);
+        }
+        else if (p =='priceChange'){
+          amount = parseFloat(val);
+          parsedAmount = Helper.getParsedValue(amount);
+          parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',targetPrice);
+        }
+        else if (p == 'profit'){
+          amount = parseFloat(val);
+          parsedAmount = Helper.getParsedValue(amount);
+          parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',(targetPrice*parseFloat(this.props.sharesOwned)));
+        }
+
+        if (amount > 0 ){
+          hideMed+= greenTextClassName;
+          hideSmall+= greenTextClassName;
+        }
+        else if (amount < 0){
+          hideMed+= redTextClassName;
+          hideSmall+= redTextClassName;
+        }
+        returnVal = [
+          <td className={hideMed}>{parsedAmount} [ {parsedPercent} ]</td>,
+          <td className={hideSmall}>{parsedAmount}<br/>{parsedPercent}</td>,
+        ];
+      }
+      else if (p =='targetPrice' ||  p =='marketValue' || p =='bookValue' || p =='price') val = '$' + (parseFloat(val).toFixed(2));
+      else if (p=='profit') {
+        val = Helper.getParsedValue(val);
+      }
+      td.push(returnVal == null ? <td>{val}</td> : returnVal);
+      // if (p =='price') td.push(this.getEditableParts());
     }
     return td;
-/*    let price = this.props.price;
-    let targetPrice = this.props.targetPrice;
-    let sharesOwned = this.props.sharesOwned;
-    let change                   = this.props.change.split(' ');
+/*  let change                   = this.props.change.split(' ');
     let changeAmount             = parseFloat(change[0]);
     let parsedChangeAmount       = Helper.getParsedValue(changeAmount,'$');
     let changePercent            = parseFloat(change[2].replace('%','')).toFixed(2);
-    let volume                   = Helper.getRoundedUnit(this.props.volume);
-    let name                     = this.props.name;
     let priceChange              = targetPrice > 0 ? (parseFloat(price) - parseFloat(targetPrice)) : 0;
     let parsedPriceChangeAmount  = Helper.getParsedValue(priceChange,'$');
     let parsedPriceChangePercent = targetPrice > 0 ? (Helper.getParsedValue(priceChange,'%',targetPrice)) : '0.00%';
-    let marketValue              = Helper.getParsedValue(parseFloat(price) * parseInt(sharesOwned));
-    let bookValue                = Helper.getParsedValue(parseFloat(targetPrice) * parseInt(sharesOwned));
     let parsedGainLossAmount     = Helper.getParsedValue(priceChange*sharesOwned);
     let parsedGainLossPercent    = sharesOwned > 0 ? (Helper.getParsedValue(priceChange,'%',parseFloat(targetPrice) * parseInt(sharesOwned))) : '0.00%';
     return[
-      <td>${this.props.price}</td>,
       this.getEditableParts(),
       <td className={priceChange > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedPriceChangeAmount} [ {parsedPriceChangePercent} ]</td>,
       <td className={priceChange > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedPriceChangeAmount}<br/>{parsedPriceChangePercent}</td>,
-      <td>{marketValue}</td>,
-      <td>{bookValue}</td>,
-      <td>{volume}</td>,
       <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedChangeAmount} [ {changePercent}% ]</td>,
       <td className={changeAmount > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedChangeAmount}<br/>{changePercent}%</td>,
       <td className={priceChange > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedGainLossAmount} [ {parsedGainLossPercent} ]</td>,

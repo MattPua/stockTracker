@@ -132,23 +132,12 @@ class StockListItem extends React.Component{
       let hideSmall = 'hide-on-small-only ';
       if (p == 'volume') val = Helper.getRoundedUnit(val);
       else if (p =='change' || p == 'priceChange' || p =='profit'){
-        let amount=0,percent='',parsedAmount='$0.00',parsedPercent='0.00%';
-
-        if (p == 'change'){
-          amount = parseFloat(val.split(' ')[0]);
-          parsedPercent = val.split(' ')[2];
-          parsedAmount = Helper.getParsedValue(amount);
-        }
-        else if (p =='priceChange'){
-          amount = parseFloat(val);
-          parsedAmount = Helper.getParsedValue(amount);
-          parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',targetPrice);
-        }
-        else if (p == 'profit'){
-          amount = parseFloat(val);
-          parsedAmount = Helper.getParsedValue(amount);
-          parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',(targetPrice*parseFloat(this.props.sharesOwned)));
-        }
+        let percent='',parsedPercent='0.00%';
+        let amount = parseFloat(val);
+        let parsedAmount = Helper.getParsedValue(amount);
+        if (p == 'change') parsedPercent = Helper.getParsedValue(amount*100,'%',(parseFloat(this.props.price)));
+        else if (p =='priceChange') parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',targetPrice);
+        else if (p == 'profit') parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',(targetPrice*parseFloat(this.props.sharesOwned)));
 
         if (amount > 0 ){
           hideMed+= greenTextClassName;
@@ -171,24 +160,6 @@ class StockListItem extends React.Component{
       // if (p =='price') td.push(this.getEditableParts());
     }
     return td;
-/*  let change                   = this.props.change.split(' ');
-    let changeAmount             = parseFloat(change[0]);
-    let parsedChangeAmount       = Helper.getParsedValue(changeAmount,'$');
-    let changePercent            = parseFloat(change[2].replace('%','')).toFixed(2);
-    let priceChange              = targetPrice > 0 ? (parseFloat(price) - parseFloat(targetPrice)) : 0;
-    let parsedPriceChangeAmount  = Helper.getParsedValue(priceChange,'$');
-    let parsedPriceChangePercent = targetPrice > 0 ? (Helper.getParsedValue(priceChange,'%',targetPrice)) : '0.00%';
-    let parsedGainLossAmount     = Helper.getParsedValue(priceChange*sharesOwned);
-    let parsedGainLossPercent    = sharesOwned > 0 ? (Helper.getParsedValue(priceChange,'%',parseFloat(targetPrice) * parseInt(sharesOwned))) : '0.00%';
-    return[
-      this.getEditableParts(),
-      <td className={priceChange > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedPriceChangeAmount} [ {parsedPriceChangePercent} ]</td>,
-      <td className={priceChange > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedPriceChangeAmount}<br/>{parsedPriceChangePercent}</td>,
-      <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedChangeAmount} [ {changePercent}% ]</td>,
-      <td className={changeAmount > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedChangeAmount}<br/>{changePercent}%</td>,
-      <td className={priceChange > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedGainLossAmount} [ {parsedGainLossPercent} ]</td>,
-      <td className={priceChange > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedGainLossAmount}<br/>{parsedGainLossPercent}</td>
-    ];*/
   }
   getActions(){
     let name = this.props.name;

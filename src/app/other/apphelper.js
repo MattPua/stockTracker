@@ -93,11 +93,15 @@ class AppHelper{
     }
   }
 
-  static getParsedValue(value,type='$',value2){
-    if (type == '$')
+  static getParsedValue(value,type='$',value2=null,includePositive=true){
+    if (type == '$' && includePositive)
+      return (value >= 0 ? '+$' : '-$') + (Math.abs(value).toFixed(2));
+    else if (type == '$' && !includePositive)
       return (value >= 0 ? '$' : '-$') + (Math.abs(value).toFixed(2));
-    else if (type =='%')
+    else if (type =='%' && value2 !=null)
       return (value >= 0 ? '':'-') + (Math.abs(value)/parseFloat(value2)).toFixed(2) +'%';
+    else if (type == '%' && value2 ==null)
+      return (value >= 0 ? '' : '-') + Math.abs(parseFloat(value)).toFixed(2) + '%';
   }
 
 }

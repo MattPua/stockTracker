@@ -110,7 +110,7 @@ class App extends React.Component{
         <Header className='col s12'/>
         <FixedItems refreshList={this.getStocks.bind(this)}/>
         <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
-        <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime}/>
+        <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime} stocks={this.state.stocks}/>
         <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
         <Footer/>
       </main>

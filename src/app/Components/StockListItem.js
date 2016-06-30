@@ -39,7 +39,6 @@ class StockListItem extends React.Component{
     //TODO: Prevent multiple dots
     //TODO: Ensure if there's a dot,there's at least one number after it
 
-    // Only do something if they save i guess
     this.setState({
       targetPrice: value,
     });
@@ -59,7 +58,6 @@ class StockListItem extends React.Component{
     this.onEdit();
     if (parseFloat(this.props.targetPrice).toFixed(2) == parseFloat(this.state.targetPrice).toFixed(2) && 
       parseInt(this.props.sharesOwned) == parseInt(this.state.sharesOwned)) return;
-    // TODO: Should be ID instead
     this.props.editStock(this.props._id,this.state);
   }
 

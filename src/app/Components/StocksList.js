@@ -101,7 +101,7 @@ StocksList.defaultProps = {
   stocks        : [],
   sortDirection : 1,
   sortBy        : '',
-  defaultProperties: ['name','price','sharesOwned','targetPrice','priceChange','marketValue','bookValue','volume','change','profit'],
+  defaultProperties: ['name','price','change','sharesOwned','targetPrice','priceChange','marketValue','bookValue','volume','profit'],
   extraProperties: ['ask','bid','dayRange','yearRange','dividendYield','dividendPerShare','dividendPayDate','exDividendDate'],
 };
 StocksList.propTypes = {};

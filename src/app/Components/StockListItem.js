@@ -152,12 +152,11 @@ class StockListItem extends React.Component{
           <td className={hideSmall}>{parsedAmount}<br/>{parsedPercent}</td>,
         ];
       }
-      else if (p =='targetPrice' ||  p =='marketValue' || p =='bookValue' || p =='price') val = '$' + (parseFloat(val).toFixed(2));
-      else if (p=='profit') {
-        val = Helper.getParsedValue(val);
-      }
+      else if (p =='marketValue' || p =='bookValue' || p =='price') val = '$' + (parseFloat(val).toFixed(2));
+      else if (p=='profit') val = Helper.getParsedValue(val);
+      else if (p == 'sharesOwned') returnVal = this.getEditableParts();
+      else if (p =='targetPrice') continue;
       td.push(returnVal == null ? <td>{val}</td> : returnVal);
-      // if (p =='price') td.push(this.getEditableParts());
     }
     return td;
   }
@@ -253,7 +252,7 @@ StockListItem.defaultProps = {
   sharesOwned: 0,
   price: 0.00,
   _id: '',
-  defaultProperties: ['price','sharesOwned','targetPrice','priceChange','marketValue','bookValue','volume','change','profit'],
+  defaultProperties: ['price','change','sharesOwned','targetPrice','priceChange','marketValue','bookValue','volume','profit'],
   extraProperties: ['ask','bid','dayRange','yearRange','dividendYield','dividendPerShare','dividendPayDate','exDividendDate'],
 };
 StockListItem.propTypes = {};

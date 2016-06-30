@@ -29,11 +29,8 @@ class App extends React.Component{
     this.getStocks();
   }
   searchStock(stock){
-    let data = JSON.stringify({
-      stock: stock
-    });
     let that = this;
-    let config = Helper.ajaxConfig('quotes','POST',data);
+    let config = Helper.ajaxConfig('quotes/search?symbol='+stock,'GET',null);
     Helper.ajaxCall(this, config, this.addStock);
   }
   componentDidUpdate(prevProps,prevState){
@@ -47,7 +44,9 @@ class App extends React.Component{
     let config = Helper.ajaxConfig('quotes/'+symbol,'POST',data);
     //TODO: Really inefficient process here
     Helper.ajaxCall(this,config,(data,that) =>{
-      that.getStocks();
+      setTimeout(function(){
+        that.getStocks();
+      },1000);
     });
   }
 
@@ -70,8 +69,6 @@ class App extends React.Component{
       stocks.sort(Helper.dynamicSort(that.state.sortBy,that.state.sortDirection));
       that.setState({stocks: stocks, lastUpdateTime: moment()});
 
-      // that.setState({stocks: updatedStocks, lastUpdateTime: moment()});
-      // that.getUpdatedStockInfo();
     });
   }
   removeStock(id){
@@ -89,8 +86,7 @@ class App extends React.Component{
   }
 
   addStock(obj,that){
-    let details = obj.data;
-    let stock = details[0];
+    let stock = obj.data;
     if (stock.name =='N/A') {Materialize.toast('That Stock Symbol does not exist!',4000); return;}
     for (let s of that.state.stocks)
       if (s['symbol'] == undefined) return;
@@ -107,35 +103,6 @@ class App extends React.Component{
       that.getStocks();
     });
   }
-/*  getUpdatedStockInfo(){
-    // TODO:  move this to app.js
-    let savedStocks = this.state.stocks;
-    let query = '';
-    for (let i =0;i <savedStocks.length;i++){
-      query+=savedStocks[i]['symbol'];
-      if (i!=savedStocks.length - 1)query+="+";
-    }
-    let data = JSON.stringify({
-      stock: query
-    });
-    let config = Helper.ajaxConfig('quotes','POST',data);
-    Helper.ajaxCall(this,config, (data,that) =>{
-      let existingStocks = that.state.stocks;
-      let updatedStocks = [];
-      // TODO: THIS IS HORRENDOUS
-      for (let stock of data.data){
-        for (let s of existingStocks){
-          if (s['symbol'] == stock.symbol){
-            // let updatedStock = {symbol: stock.symbol};
-            let updatedStock = $.extend({},stock,s);
-            updatedStocks.push(updatedStock); 
-          }
-        }
-      }
-      updatedStocks.sort(Helper.dynamicSort(that.state.sortBy,that.state.sortDirection));
-      that.setState({stocks: updatedStocks, lastUpdateTime: moment()});
-    });
-  }*/
 
   render(){
     return (

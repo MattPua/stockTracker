@@ -116,7 +116,8 @@ app.get('/quotes',(req,res)=>{
           let stocksFormatted = [];
           for(let stockNoFormat of stocksNoFormat){
             let stock = {};
-            let stockArray = stockNoFormat.split(',');
+            // https://stackoverflow.com/questions/23582276/split-string-by-comma-but-ignore-commas-inside-quotes
+            let stockArray = stockNoFormat.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             for (let i in stockArray){
               let key  = '';
               let value = stockArray[i];
@@ -128,7 +129,7 @@ app.get('/quotes',(req,res)=>{
               else if (i ==1) key ='name';
               else if (i ==2) key = 'ask';
               else if (i ==3) key ='bid';
-              else if (i ==4) key ='change';
+              else if (i ==4) {key ='change'; value=value.split(' ')[0]}
               else if (i ==5) key = 'dayRange';
               else if (i ==6) key = 'price';
               else if (i ==7) key ='volume';
@@ -186,7 +187,6 @@ app.post('/quotes/:id',(req,res)=>{
 app.post('/quotes/:id/delete',(req,res)=>{
   util.log(util.inspect(req.body));
   let id =req.params.id
-  console.log(id);
   // Should be by ID
   db.collection('quotes').deleteOne({_id: new MongoClient.ObjectID(id)},(err,result) =>{
     if (err) console.error(err);
@@ -195,51 +195,25 @@ app.post('/quotes/:id/delete',(req,res)=>{
 
 });
 
-
-/*// GetUpdatedStockInfo()
-app.post('/quotes',(req,res) => {
+// SearchStock()
+app.get('/quotes/search?',(req,res)=>{
+  let symbol = req.query.symbol;
   util.log(util.inspect(req.body));
-
-  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcml1vydr1qw', (error,response,body) =>{
-    if (!error && response.statusCode == 200) {
-      let stocksNoFormat = body.split('\n');
-      console.log(stocksNoFormat);
-      let stocksFormatted = [];
-      for(let stockNoFormat of stocksNoFormat){
-        let stock = {};
-        let stockArray = stockNoFormat.split(',');
-        for (let i in stockArray){
-          let key  = '';
-          let value = stockArray[i];
-          // TODO: Check this
-          if (value == '') break;
-          value = value.replace(/"/g,'');
-          if (i      == 0) key = 'symbol';
-          else if (i ==1) key ='name';
-          else if (i ==2) key = 'ask';
-          else if (i ==3) key ='bid';
-          else if (i ==4) key ='change';
-          else if (i ==5) key = 'dayRange';
-          else if (i ==6) key = 'price';
-          else if (i ==7) key ='volume';
-          else if (i ==8) key ='dividendYield';
-          else if (i ==9) key = 'dividendPerShare';
-          else if (i ==10) key ='dividendPayDate';
-          else if (i ==11)key = 'exDividendDate';
-          else if (i ==12) key ='yearRange';
-          stock[key] = value;
-        }
-        stock = Functions.getAdditionalValues(stock);
-
-        if (Object.keys(stock).length)
-          stocksFormatted.push(stock);
-      }
-      res.json({data: stocksFormatted});
+  request('http://finance.yahoo.com/d/quotes.csv?s='+symbol+'&f=snab',(error,response,body) =>{
+    if (!error && response.statusCode == 200){
+      let stocksNoFormat = body.split('\n')[0];
+      let values = stocksNoFormat.split(',');
+      let stock = {
+        name: values[1].replace(/"/g,''),
+        symbol: symbol
+      };
+      res.json({success: true, data: stock});
     }
-    else console.log(error);
+    else {
+      console.error(err);
+      res.json({success: false});
+    }
   });
 });
-
-*/
 
 

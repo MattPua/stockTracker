@@ -75,62 +75,88 @@ class StockListItem extends React.Component{
     let content = null;
     if (this.state.editMode){
       return[
-        <td>
-          <label for='targetPrice'  className='hide-on-small-only'>Target Price</label>
-          <input type='text' value={this.state.targetPrice}  placeholder='Target Price' name='targetPrice' onChange={this.onTargetPriceChange.bind(this)}/>
-        </td>,
         <td>  
           <label for='sharesOwned' className='hide-on-small-only'>Shares Owned</label>
           <input type='text' value={this.state.sharesOwned} placeholder='Shares Owned' name='sharesOwned' onChange={this.onSharesOwnedChange.bind(this)}/>
+        </td>,
+        <td>
+          <label for='targetPrice'  className='hide-on-small-only'>Target Price</label>
+          <input type='text' value={this.state.targetPrice}  placeholder='Target Price' name='targetPrice' onChange={this.onTargetPriceChange.bind(this)}/>
         </td>
       ];
     }
     else{
       return[
-        <td>
-          <span >${this.state.targetPrice}</span>
-        </td>,
-        <td>
-          <span >{this.state.sharesOwned}</span>
-        </td>
+        <td><span >{this.state.sharesOwned}</span></td>,
+        <td><span >${this.state.targetPrice}</span></td>
       ];
     }
   }
 
-  getTableHeaders(){
-    let properties = ['price','targetPrice','sharesOwned','ask','bid','volume','change','dayRange'];
-    let th = [];
-    for (let p of properties){
-      th.push(
-        <th data-field={p}>{Helper.toUpperOne(p)}</th>
-      )
+  getAdditionalInformation(){
+    let extraInfo = this.props.extraProperties;
+    let html = [];
+    for (let i of extraInfo){
+      let value = this.props[i];
+      if (i == 'dividendYield' && value!='N/A') value = value+'%';
+      else if (i =='dividendPerShare' && value!='N/A') value = '$'+value;
+      else if (i == 'yearRange' || i =='ask' || i =='bid' || i=='dayRange') value = '$' + value; 
+      html.push(
+        <li className='collection-item'>
+          <div>
+            <span>{Helper.toUpperOne(i)}:</span><span className='right'>{value}</span> 
+          </div>
+        </li>);
     }
-    return(
-      <tr>
-        {th}
-      </tr>
-    );
+    return html;
+  }
+
+  getTableHeaders(){
+    let properties = this.props.defaultProperties;
+    let th = [];
+    for (let p of properties)
+      th.push(<th data-field={p}>{Helper.toUpperOne(p)}</th>)
+    return(<tr>{th}</tr>);
   }
 
   getValues(){
-    let change             = this.props.change.split(' ');
-    let changeAmount       = parseFloat(change[0]);
-    let parsedChangeAmount = (changeAmount > 0 ? '$' : '-$') + Math.abs(changeAmount).toFixed(2);
-    let changePercent      = parseFloat(change[2].replace('%','')).toFixed(2);
-    let dayRange           = this.props.dayRange.split(' ');
-    let parsedDayRange     = "$"+dayRange[0] + ' - '+ dayRange[2];
-    let volume             = Helper.getRoundedUnit(this.props.volume);
-    let name               = this.props.name;
+    let properties = this.props.defaultProperties;
+    let td = [];
+    for (let p of properties){
+      td.push(
+        <td>{this.props[p]}</td>
+      );
+    }
+    return td;
+/*    let price = this.props.price;
+    let targetPrice = this.props.targetPrice;
+    let sharesOwned = this.props.sharesOwned;
+    let change                   = this.props.change.split(' ');
+    let changeAmount             = parseFloat(change[0]);
+    let parsedChangeAmount       = Helper.getParsedValue(changeAmount,'$');
+    let changePercent            = parseFloat(change[2].replace('%','')).toFixed(2);
+    let volume                   = Helper.getRoundedUnit(this.props.volume);
+    let name                     = this.props.name;
+    let priceChange              = targetPrice > 0 ? (parseFloat(price) - parseFloat(targetPrice)) : 0;
+    let parsedPriceChangeAmount  = Helper.getParsedValue(priceChange,'$');
+    let parsedPriceChangePercent = targetPrice > 0 ? (Helper.getParsedValue(priceChange,'%',targetPrice)) : '0.00%';
+    let marketValue              = Helper.getParsedValue(parseFloat(price) * parseInt(sharesOwned));
+    let bookValue                = Helper.getParsedValue(parseFloat(targetPrice) * parseInt(sharesOwned));
+    let parsedGainLossAmount     = Helper.getParsedValue(priceChange*sharesOwned);
+    let parsedGainLossPercent    = sharesOwned > 0 ? (Helper.getParsedValue(priceChange,'%',parseFloat(targetPrice) * parseInt(sharesOwned))) : '0.00%';
     return[
       <td>${this.props.price}</td>,
       this.getEditableParts(),
-      <td>${this.props.ask}</td>,
-      <td>${this.props.bid}</td>,
+      <td className={priceChange > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedPriceChangeAmount} [ {parsedPriceChangePercent} ]</td>,
+      <td className={priceChange > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedPriceChangeAmount}<br/>{parsedPriceChangePercent}</td>,
+      <td>{marketValue}</td>,
+      <td>{bookValue}</td>,
       <td>{volume}</td>,
       <td className={changeAmount > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedChangeAmount} [ {changePercent}% ]</td>,
       <td className={changeAmount > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedChangeAmount}<br/>{changePercent}%</td>,
-      <td>{parsedDayRange}</td>
-    ];
+      <td className={priceChange > 0  ? 'hide-on-med-and-up green-text text-darken-3' : 'hide-on-med-and-up red-text text-darken-1'}>{parsedGainLossAmount} [ {parsedGainLossPercent} ]</td>,
+      <td className={priceChange > 0  ? 'hide-on-small-only green-text text-darken-3' : 'hide-on-small-only red-text text-darken-1'}>{parsedGainLossAmount}<br/>{parsedGainLossPercent}</td>
+    ];*/
   }
   getActions(){
     let name = this.props.name;
@@ -158,7 +184,7 @@ class StockListItem extends React.Component{
             <div className="activator">Activator</div>
           </div>*/}
           <div className="card-content">
-             <span className="card-title activator grey-text text-darken-4 truncate">{Helper.toUpperFirstLetterOnly(this.props.name)}<i className="material-icons right">more_vert</i></span>
+             <span className="card-title activator grey-text text-darken-4 truncate">{this.props.name}<i className="material-icons right">more_vert</i></span>
              <div className="row">
                <div className={"hide-on-med-and-up "}>
                  <table className={"bordered highlight responsive-table"}>
@@ -173,11 +199,14 @@ class StockListItem extends React.Component{
                  </table>
                </div>
              </div>
+             <hr/>
             {this.getActions()}
           </div>
           <div className="card-reveal">
              <span className="card-title grey-text text-darken-4">{Helper.toUpperFirstLetterOnly(this.props.name)}<i className="material-icons right">close</i></span>
-             <p>Here is some more information about this product that is only revealed once clicked on.</p>
+             <ul className='collection'>
+              {this.getAdditionalInformation()}
+             </ul>
           </div>
         </div>
       </div>
@@ -187,8 +216,11 @@ class StockListItem extends React.Component{
   getDesktopAndTablet(){
     return(
       <tr className={"stock-list-item-container " + this.props.className} ref='item'>
-        <td className='truncate'>{Helper.toUpperFirstLetterOnly(this.props.name)}</td>
-        <td>{this.props.symbol}</td>
+        <td className='truncate'>
+          <span>{this.props.symbol}</span>
+          <br/>
+          {this.props.name}
+        </td>
         {this.getValues()}
         <td>
           {this.getActions()}
@@ -218,6 +250,8 @@ StockListItem.defaultProps = {
   sharesOwned: 0,
   price: 0.00,
   _id: '',
+  defaultProperties: ['price','sharesOwned','targetPrice','priceChange','marketValue','bookValue','volume','change','profit'],
+  extraProperties: ['ask','bid','dayRange','yearRange','dividendYield','dividendPerShare','dividendPayDate','exDividendDate'],
 };
 StockListItem.propTypes = {};
 

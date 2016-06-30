@@ -38,11 +38,10 @@ class App extends React.Component{
   }
   componentDidUpdate(prevProps,prevState){
     if (prevState.sortBy != this.state.sortBy || prevState.sortDirection != this.state.sortDirection)
-      this.getUpdatedStockInfo();
+      this.getStocks();
   }
 
   editStock(symbol,properties){
-    console.info(symbol,properties);
     let data = JSON.stringify({properties: properties});
     //TODO: Should be ID
     let config = Helper.ajaxConfig('quotes/'+symbol,'POST',data);
@@ -67,10 +66,12 @@ class App extends React.Component{
         let newStock = {};
         newStock = Helper.createObjectFromProperties(stock);
         stocks.push(newStock);
-        // newStock['symbol'] = stock.symbol;
       }
-      that.setState({stocks: stocks});
-      that.getUpdatedStockInfo();
+      stocks.sort(Helper.dynamicSort(that.state.sortBy,that.state.sortDirection));
+      that.setState({stocks: stocks, lastUpdateTime: moment()});
+
+      // that.setState({stocks: updatedStocks, lastUpdateTime: moment()});
+      // that.getUpdatedStockInfo();
     });
   }
   removeStock(id){
@@ -92,7 +93,7 @@ class App extends React.Component{
     let stock = details[0];
     if (stock.name =='N/A') {Materialize.toast('That Stock Symbol does not exist!',4000); return;}
     for (let s of that.state.stocks)
-      if (s[stock.symbol] != undefined) return;
+      if (s['symbol'] == undefined) return;
     
     let data = JSON.stringify({
       symbol: stock.symbol,
@@ -106,7 +107,7 @@ class App extends React.Component{
       that.getStocks();
     });
   }
-  getUpdatedStockInfo(){
+/*  getUpdatedStockInfo(){
     // TODO:  move this to app.js
     let savedStocks = this.state.stocks;
     let query = '';
@@ -134,7 +135,7 @@ class App extends React.Component{
       updatedStocks.sort(Helper.dynamicSort(that.state.sortBy,that.state.sortDirection));
       that.setState({stocks: updatedStocks, lastUpdateTime: moment()});
     });
-  }
+  }*/
 
   render(){
     return (

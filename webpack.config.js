@@ -64,6 +64,9 @@ const config = {
       }
     ]
   },
+  sassLoader: {
+    includePaths: [path.resolve(process.cwd(), 'node_modules')],
+  },
   plugins: [
     new ExtractTextPlugin("style.css", { allChunks: true }),
     new webpack.ProvidePlugin({
@@ -86,8 +89,6 @@ const config = {
     alias: {
       // Some modules might use their own jquery. Use this to resolve other jquery into mine
       'jquery': path.join(__dirname, 'node_modules/jquery/dist/jquery'),
-      // Needed this to get momentjs to work
-      // moment: path.join(__dirname, "node_modules/momentjs/moment.js")
     }
   }
 };

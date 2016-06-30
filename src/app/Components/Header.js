@@ -1,3 +1,4 @@
+import './header.scss';
 export default class Header extends React.Component{
   constructor(props){
     super(props);
@@ -6,8 +7,8 @@ export default class Header extends React.Component{
   render(){
     return(
       <div className='header-container row'>
-        <div className={"" + this.props.className}>
-          <h1>Portfolio Tracker</h1>
+        <div className={"header " + this.props.className}>
+          <h1 className='center-align'>Portfolio Tracker</h1>
         </div>
       </div>
     );

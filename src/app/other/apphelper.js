@@ -92,6 +92,14 @@ class AppHelper{
       return result * direction;
     }
   }
+
+  static getParsedValue(value,type='$',value2){
+    if (type == '$')
+      return (value >= 0 ? '$' : '-$') + (Math.abs(value).toFixed(2));
+    else if (type =='%')
+      return (value >= 0 ? '':'-') + (Math.abs(value)/parseFloat(value2)).toFixed(2) +'%';
+  }
+
 }
 
 export default AppHelper;

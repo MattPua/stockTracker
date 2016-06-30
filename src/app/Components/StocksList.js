@@ -17,14 +17,12 @@ class StocksList extends React.Component{
 
   getStockListItems(type=''){
     let stockListItems = [];
+    let defaultProperties = this.props.defaultProperties.slice(1,this.props.defaultProperties.length);
     for (let stock of this.props.stocks){
       stockListItems.push(
         <StockListItem 
-          name={stock.name} symbol={stock.symbol} ask={stock.ask} 
-          bid={stock.bid} removeStock={this.props.removeStock} type={type} 
-          change={stock.change} dayRange={stock.dayRange} price={stock.price}
-          editStock={this.props.editStock} sharesOwned={stock.sharesOwned} targetPrice={stock.targetPrice}
-          _id={stock._id} key={stock._id} volume={stock.volume}
+           removeStock={this.props.removeStock} type={type} {...stock} editStock={this.props.editStock} 
+           defaultProperties={defaultProperties} extraProperties={this.props.extraProperties}
         />
       );
     }
@@ -45,7 +43,7 @@ class StocksList extends React.Component{
 
   getPropertyNames(isForMobile){
     let listItems = [];
-    let properties = ['name','symbol','price','targetPrice','sharesOwned','ask','bid','volume','change'];
+    let properties = this.props.defaultProperties;
     for (let item of properties){
       if (isForMobile)
         listItems.push(
@@ -80,7 +78,6 @@ class StocksList extends React.Component{
             <thead>
               <tr>
                 {this.getPropertyNames()}
-                <th data-field='dayRange'>Day Range</th>
                 <th data-field='actions'>Actions</th>
               </tr>
             </thead>
@@ -104,6 +101,8 @@ StocksList.defaultProps = {
   stocks        : [],
   sortDirection : 1,
   sortBy        : '',
+  defaultProperties: ['name','price','sharesOwned','targetPrice','priceChange','marketValue','bookValue','volume','change','profit'],
+  extraProperties: ['ask','bid','dayRange','yearRange','dividendYield','dividendPerShare','dividendPayDate','exDividendDate'],
 };
 StocksList.propTypes = {};
 

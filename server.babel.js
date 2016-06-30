@@ -11,6 +11,8 @@ import request from 'request';
 import util from 'util';
 import winston from 'winston';
 import expressWinston from 'express-winston';
+import * as Functions from './functions';
+import _ from 'underscore';
 // Note: Need to use the babel file otherwise cannot use es6 style
 const app = express();
 const compiler = webpack(webpackConfig);
@@ -92,8 +94,65 @@ app.post('/quotes/new',(req,res)=>{
 // GetStocks()
 app.get('/quotes',(req,res)=>{
   let cursor = db.collection('quotes').find().toArray(function(err,results){
-    if (err) console.error(err);
-    res.json({stocks: results});
+    if (err) {
+      console.error(err);
+      res.json({result: 'failure'});
+    }
+    else{
+      let stocks = [];
+      let query = '';
+      for (let s of results){
+        let newStock = {};
+        newStock = Functions.createObjectFromProperties(s);
+        stocks.push(newStock);
+        query+=s.symbol+"+";
+      }
+      query = query.substring(0,query.length-1);
+
+      request('http://finance.yahoo.com/d/quotes.csv?s='+query+'&f=snabcml1vydr1qw', (error,response,body) =>{
+        if (!error && response.statusCode == 200) {
+          let stocksNoFormat = body.split('\n');
+          console.log(stocksNoFormat);
+          let stocksFormatted = [];
+          for(let stockNoFormat of stocksNoFormat){
+            let stock = {};
+            let stockArray = stockNoFormat.split(',');
+            for (let i in stockArray){
+              let key  = '';
+              let value = stockArray[i];
+              // TODO: Check this
+              // TODO: is there a better way to do this
+              if (value == '') break;
+              value = value.replace(/"/g,'');
+              if (i      == 0) key = 'symbol';
+              else if (i ==1) key ='name';
+              else if (i ==2) key = 'ask';
+              else if (i ==3) key ='bid';
+              else if (i ==4) key ='change';
+              else if (i ==5) key = 'dayRange';
+              else if (i ==6) key = 'price';
+              else if (i ==7) key ='volume';
+              else if (i ==8) key ='dividendYield';
+              else if (i ==9) key = 'dividendPerShare';
+              else if (i ==10) key ='dividendPayDate';
+              else if (i ==11)key = 'exDividendDate';
+              else if (i ==12) key ='yearRange';
+              stock[key] = value;
+            }
+            for (let s of stocks){
+              if (s['symbol'] == stock.symbol){
+                let updatedStock = _.extend({},stock,s);
+                updatedStock = Functions.getAdditionalValues(updatedStock);
+                if (Object.keys(stock).length)
+                  stocksFormatted.push(updatedStock);
+              }
+            }
+          }
+          res.json({stocks: stocksFormatted});
+        }
+        else console.log(error);
+      });
+    }
   });
 });
 
@@ -118,7 +177,6 @@ app.post('/quotes/:id',(req,res)=>{
     }
     console.log("Saved to database");
     res.json({success: true});
-    // res.redirect('/');
   });
 
 });
@@ -138,11 +196,11 @@ app.post('/quotes/:id/delete',(req,res)=>{
 });
 
 
-// GetUpdatedStockInfo()
+/*// GetUpdatedStockInfo()
 app.post('/quotes',(req,res) => {
   util.log(util.inspect(req.body));
 
-  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcml1v', (error,response,body) =>{
+  request('http://finance.yahoo.com/d/quotes.csv?s='+req.body.stock+'&f=snabcml1vydr1qw', (error,response,body) =>{
     if (!error && response.statusCode == 200) {
       let stocksNoFormat = body.split('\n');
       console.log(stocksNoFormat);
@@ -164,8 +222,15 @@ app.post('/quotes',(req,res) => {
           else if (i ==5) key = 'dayRange';
           else if (i ==6) key = 'price';
           else if (i ==7) key ='volume';
+          else if (i ==8) key ='dividendYield';
+          else if (i ==9) key = 'dividendPerShare';
+          else if (i ==10) key ='dividendPayDate';
+          else if (i ==11)key = 'exDividendDate';
+          else if (i ==12) key ='yearRange';
           stock[key] = value;
         }
+        stock = Functions.getAdditionalValues(stock);
+
         if (Object.keys(stock).length)
           stocksFormatted.push(stock);
       }
@@ -175,5 +240,6 @@ app.post('/quotes',(req,res) => {
   });
 });
 
+*/
 
 

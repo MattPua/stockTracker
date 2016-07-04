@@ -12,8 +12,8 @@ class StockListItem extends React.Component{
 
   componentWillReceiveProps(nextProps){
     this.setState({
-      targetPrice: this.props.targetPrice,
-      sharesOwned: this.props.sharesOwned,
+      targetPrice: nextProps.targetPrice,
+      sharesOwned: nextProps.sharesOwned,
     });
   }
   componentWillUnmount(){
@@ -121,8 +121,7 @@ class StockListItem extends React.Component{
     let properties = this.props.defaultProperties;
     let td = [];
     let targetPrice = parseFloat(this.props['targetPrice']);
-    let redTextClassName = ' red-text text-darken-1';
-    let greenTextClassName = ' green-text text-darken-3';
+
     for (let p of properties){
       let val = this.props[p];
       let returnVal = null;
@@ -138,12 +137,12 @@ class StockListItem extends React.Component{
         else if (p == 'profit') parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',(targetPrice*parseFloat(this.props.sharesOwned)));
 
         if (amount > 0 ){
-          hideMed+= greenTextClassName;
-          hideSmall+= greenTextClassName;
+          hideMed+= " trending_up";
+          hideSmall+= " trending_up";
         }
         else if (amount < 0){
-          hideMed+= redTextClassName;
-          hideSmall+= redTextClassName;
+          hideMed+= " trending_down";
+          hideSmall+= " trending_down";
         }
         returnVal = [
           <td className={hideMed}>{parsedAmount} [ {parsedPercent} ]</td>,

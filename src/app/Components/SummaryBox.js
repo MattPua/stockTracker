@@ -5,6 +5,9 @@ class SummaryBox extends React.Component{
   constructor(props){
     super(props);
   }
+  componentDidMount(){
+    $(this.refs.helpTooltip).tooltip();
+  }
 
   onClick(){
     this.props.refreshList();
@@ -59,6 +62,10 @@ class SummaryBox extends React.Component{
     let dayProfit        = this.getDayProfit();
     let totalProfit      = this.getTotalProfit();
     let profitPercentage = this.getTotalProfitPercentage();
+
+    let marketValueTrendText = dayProfit > 0 ? 'trending_up' : (dayProfit == 0 ? 'trending_flat' : 'trending_down');
+    let dayTrendText = dayProfit > 0 ? 'trending_up' : (dayProfit == 0 ? 'trending_flat' : 'trending_down');
+    let overallProfitText = totalProfit > 0 ? 'trending_up' : ( totalProfit == 0 ? 'trending_flat' : 'trending_down');
     return(
       <div className='summary-box-container row'>
         <div className={'summary-box ' + this.props.className}>
@@ -71,19 +78,19 @@ class SummaryBox extends React.Component{
             <div className="col s12 highlight-box">
               <div className='col s12 m3'>
                 <h5>Total Market Value:</h5>
-                <div>{Helper.getParsedValue(totalMarketValue,'$',null,false)}<i className='material-icons'>{dayProfit > 0 ? 'trending_up' : (dayProfit == 0 ? 'trending_flat' : 'trending_down')}</i></div>
+                <div className={marketValueTrendText}>{Helper.getParsedValue(totalMarketValue,'$',null,false)}<i className={'material-icons '}>{marketValueTrendText}</i></div>
               </div>
               <div className='col s12 m3'>
                 <h5>Total Book Value:</h5>
                 <div>{Helper.getParsedValue(totalBookValue,'$',null,false)}</div>
               </div>
               <div className='col s12 m3'>
-                <h5>Today's Profit:</h5>
-                <div>{Helper.getParsedValue(dayProfit)}</div>
+                <h5 className='day-profit'>Today's Profit:<i className='material-icons' data-position="top" data-delay="50" data-tooltip="Value change for the day for each stock x # stocks owned" ref='helpTooltip'>live_help</i></h5>
+                <div className={dayTrendText}>{Helper.getParsedValue(dayProfit)}</div>
               </div>
               <div className='col s12 m3'>
                 <h5>Overall Profit:</h5>
-                <div>{Helper.getParsedValue(totalProfit)} [ {Helper.getParsedValue(profitPercentage,'%',null)} ]<i className='material-icons'>{dayProfit > 0 ? 'trending_up' : (dayProfit == 0 ? 'trending_flat' : 'trending_down')}</i></div>
+                <div className={overallProfitText}>{Helper.getParsedValue(totalProfit)} [ {Helper.getParsedValue(profitPercentage,'%',null)} ]<i className={'material-icons ' + dayTrendText}>{dayTrendText}</i></div>
               </div>
             </div>
           </div>

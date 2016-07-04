@@ -19,7 +19,8 @@ module.exports=function(app,db){
       password: password,
     },function(err,results){
       console.log(results);
-      if (err) res.json({success: false,error: err.errMsg});
+      if (err)res.json({success: false,error: err.errMsg});
+      else if (results == null || results.length == 0) res.json({success: false,error: 'Username/password combination was incorrect'});
       else res.cookie('userId',results._id,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user}); 
     });
   });

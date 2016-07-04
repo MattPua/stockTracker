@@ -115,6 +115,7 @@ class App extends React.Component{
     });
     let config = Helper.ajaxConfig('users','POST',data);
     Helper.ajaxCall(this,config,(result,that) =>{
+      console.log(result);
       if (result.success){
         that.setState({
           username: result.username 

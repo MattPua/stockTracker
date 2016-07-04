@@ -42,6 +42,9 @@ export default class Login extends React.Component{
     this.props.signup({
       username: this.state.username,
       password: this.state.password,
+    },function(error){
+      console.error(error);
+      Materialize.toast(error, 4000);
     });
   }
 
@@ -51,6 +54,9 @@ export default class Login extends React.Component{
     this.props.login({
       username: this.state.username,
       password: this.state.password,
+    },function(error){
+      console.error(error);
+      Materialize.toast(error, 4000);
     });
   }
 

@@ -108,7 +108,7 @@ class App extends React.Component{
     });
   }
 
-  login(params){
+  login(params,callback){
     let data = JSON.stringify({
       username: params.username,
       password: params.password,
@@ -121,18 +121,20 @@ class App extends React.Component{
         });
         that.getStocks();
       }
-      else console.error(result.error);
+      else callback(result.error);
     });
   }
 
-  signup(params){
+  signup(params,callback){
     let data = JSON.stringify({
       username: params.username,
       password: params.password,
     });
     let config = Helper.ajaxConfig('users/new','POST',data);
     Helper.ajaxCall(this,config,(result) =>{
-      console.log(result);
+      if (result.success){
+      }
+      else callback(result.error);
     });
   }
 

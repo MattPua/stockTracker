@@ -11,12 +11,14 @@ import request from 'request';
 import util from 'util';
 import winston from 'winston';
 import expressWinston from 'express-winston';
+import cookieParser from 'cookie-parser';
 import * as Functions from './functions';
 import _ from 'underscore';
 // Note: Need to use the babel file otherwise cannot use es6 style
 const app = express();
 const compiler = webpack(webpackConfig);
 
+app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 //app.use(multer()); // for parsing multipart/form-data
@@ -69,19 +71,14 @@ MongoClient.connect('mongodb://'+DBConfig.MONGO_USERNAME+':'+DBConfig.MONGO_PASS
 });
 
 
-app.get('/', (req, res) => {
-  // Note: __dirname is the path to your current working directory. 
-  res.sendFile(__dirname + '/index.html')
-  let cursor = db.collection('quotes').find().toArray(function(err,results){
-    if (err) console.error(err);
-  });
-});
-
 // AddStock()
 app.post('/quotes/new',(req,res)=>{
+  if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
   console.log('saving stock');
   util.log(util.inspect(req.body));
-  db.collection('quotes').save(req.body, (err,results) => {
+  let stock = req.body;
+  stock.userId = new MongoClient.ObjectID(req.cookies.userId);
+  db.collection('quotes').save(stock, (err,results) => {
     if (err) {
       console.error(err);
       res.json({success: false});
@@ -93,7 +90,11 @@ app.post('/quotes/new',(req,res)=>{
 
 // GetStocks()
 app.get('/quotes',(req,res)=>{
-  let cursor = db.collection('quotes').find().toArray(function(err,results){
+  if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
+
+  let cursor = db.collection('quotes').find({
+    userId: new MongoClient.ObjectID(req.cookies.userId),
+  }).toArray(function(err,results){
     if (err) {
       console.error(err);
       res.json({result: 'failure'});
@@ -161,6 +162,8 @@ app.get('/quotes',(req,res)=>{
 
 // EditStock()
 app.post('/quotes/:id',(req,res)=>{
+  if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
+
   let id =req.params.id
   util.log(util.inspect(req.body));
   let properties = req.body.properties;
@@ -168,7 +171,7 @@ app.post('/quotes/:id',(req,res)=>{
   let targetPrice = parseFloat(properties.targetPrice).toFixed(2);
   let sharesOwned = parseInt(properties.sharesOwned);
   db.collection('quotes').update(
-    { '_id' : new MongoClient.ObjectID(id) },
+    { '_id' : new MongoClient.ObjectID(id), 'userId' : new MongoClient.ObjectID(req.cookies.userId) },
     {
       $set: { 'targetPrice' : targetPrice, 'sharesOwned': sharesOwned},
       $currentDate: { 'lastModified': true}
@@ -190,7 +193,7 @@ app.post('/quotes/:id/delete',(req,res)=>{
   util.log(util.inspect(req.body));
   let id =req.params.id
   // Should be by ID
-  db.collection('quotes').deleteOne({_id: new MongoClient.ObjectID(id)},(err,result) =>{
+  db.collection('quotes').deleteOne({_id: new MongoClient.ObjectID(id), userId: new MongoClient.ObjectID(req.cookies.userId)},(err,result) =>{
     if (err) console.error(err);
     res.json({id: id});
   });
@@ -199,6 +202,8 @@ app.post('/quotes/:id/delete',(req,res)=>{
 
 // SearchStock()
 app.get('/quotes/search?',(req,res)=>{
+  if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
+  
   let symbol = req.query.symbol;
   util.log(util.inspect(req.body));
   request('http://finance.yahoo.com/d/quotes.csv?s='+symbol+'&f=snab',(error,response,body) =>{
@@ -219,3 +224,45 @@ app.get('/quotes/search?',(req,res)=>{
 });
 
 
+//Login
+app.post('/users',(req,res) =>{
+  util.log(util.inspect(req.body));
+
+  let user = req.body.username;
+
+  // Password needs to be hashed and salted
+  let password = req.body.password;
+  db.collection('users').findOne({
+    username: user,
+    password: password,
+  },function(err,results){
+    console.log(results);
+    if (err) res.json({success: false,error: err.errMsg});
+    else res.cookie('userId',results._id,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user}); 
+  });
+});
+
+//Signup
+app.post('/users/new',(req,res)=>{
+  util.log(util.inspect(req.body));
+
+  let user = req.body.username;
+
+  // Password needs to be hashed and salted
+  let password = req.body.password;
+  db.collection('users').save({
+    username: user,
+    password: password,
+  },function(err,results){
+    console.log(results);
+    if (err) {
+      let error = err.errMsg;
+      if (err.code == 11000) error = 'Username has already been taken';
+      res.json({success: false, error: error});
+    }
+    else {
+      res.json({success: true, username: user, _id: results._id});
+    }
+  });
+
+});

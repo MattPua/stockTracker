@@ -18,3 +18,11 @@ export function createObjectFromProperties(object){
   }
   return obj;
 }
+
+export function isSignedIn(cookie){
+  if (cookie == null || cookie.userId == null){
+    console.error('User attempting to access function without being signed in');
+    return false;
+  }
+  return true;
+}

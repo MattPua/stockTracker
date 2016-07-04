@@ -6,6 +6,7 @@ import Header from './Components/Header';
 import Helper from './other/apphelper';
 import FixedItems from './Components/FixedItems';
 import Footer from './Components/Footer';
+import Login from './Components/Login';
 import './other/main.scss';
 import moment from 'moment';
 // Note: need this for materialize other wise won't work properly
@@ -21,12 +22,13 @@ class App extends React.Component{
       lastUpdateTime: moment(),
       sortDirection: 1,
       sortBy: 'name',
+      username: null,
     };
   }
   componentDidUpdate(prevProps,prevState){
   }
   componentDidMount(){
-    this.getStocks();
+    // this.getStocks();
   }
   searchStock(stock){
     let that = this;
@@ -34,6 +36,8 @@ class App extends React.Component{
     Helper.ajaxCall(this, config, this.addStock);
   }
   componentDidUpdate(prevProps,prevState){
+    if (this.state.username== null || this.state.username == '') return;
+
     if (prevState.sortBy != this.state.sortBy || prevState.sortDirection != this.state.sortDirection)
       this.getStocks();
   }
@@ -95,7 +99,7 @@ class App extends React.Component{
       symbol: stock.symbol,
       name: stock.name,
       targetPrice: 0.00,
-      sharesOwned: 0
+      sharesOwned: 0,
     });
     let config = Helper.ajaxConfig('quotes/new','POST',data);
     Helper.ajaxCall(this,config,(result)=>{
@@ -104,17 +108,55 @@ class App extends React.Component{
     });
   }
 
+  login(params){
+    let data = JSON.stringify({
+      username: params.username,
+      password: params.password,
+    });
+    let config = Helper.ajaxConfig('users','POST',data);
+    Helper.ajaxCall(this,config,(result,that) =>{
+      if (result.success){
+        that.setState({
+          username: result.username 
+        });
+        that.getStocks();
+      }
+      else console.error(result.error);
+    });
+  }
+
+  signup(params){
+    let data = JSON.stringify({
+      username: params.username,
+      password: params.password,
+    });
+    let config = Helper.ajaxConfig('users/new','POST',data);
+    Helper.ajaxCall(this,config,(result) =>{
+      console.log(result);
+    });
+  }
+
+
   render(){
-    return (
-      <main className=''>
-        <Header className='col s12'/>
-        <FixedItems refreshList={this.getStocks.bind(this)}/>
-        <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
-        <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime} stocks={this.state.stocks}/>
-        <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
-        <Footer/>
-      </main>
-    );
+    if (this.state.username == null)
+      return(
+        <main>
+          <Header className='col s12'/>
+          <Login login={this.login.bind(this)} signup={this.signup.bind(this)}/>
+          <Footer/>
+        </main>
+      );
+    else 
+      return (
+        <main className=''>
+          <Header className='col s12'/>
+          <FixedItems refreshList={this.getStocks.bind(this)}/>
+          <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
+          <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime} stocks={this.state.stocks}/>
+          <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
+          <Footer/>
+        </main>
+      );
   }
 }
 window.moment = moment;

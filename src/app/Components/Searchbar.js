@@ -20,7 +20,7 @@ class Searchbar extends React.Component{
         <div className={"searchbar " + this.props.className} >
             <form onSubmit={this.onSubmit.bind(this)} action='/quotes' method='POST'>
                 <div className='input-field col s12'>
-                  <label for='stock' data-error='Symbol Does Not Exist' data-success='Symbol Found'>Symbol</label>
+                  <label className='active' for='stock' data-error='Symbol Does Not Exist' data-success='Symbol Found'>Symbol</label>
                   <input className='validate' type="text" placeholder="Stock Name or Symbol" value={this.state.query} onChange={this.onChange.bind(this)} name='stock'/>
                 </div>
                 <div className='input-field col s12'>

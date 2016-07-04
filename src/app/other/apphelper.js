@@ -79,7 +79,8 @@ class AppHelper{
   }
 
   static dynamicSort(property,direction=1){
-    let listOfNumProps = ['price','ask','bid','volume'];
+    // NOTE: This has to be updated anytime you want to add a new category which could have negative values
+    let listOfNumProps = ['price','ask','bid','volume','priceChange','change','profit'];
 
     return function(a,b){
       let aValue = a[property];

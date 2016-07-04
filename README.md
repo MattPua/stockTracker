@@ -28,3 +28,6 @@ Reference: http://www.jarloo.com/yahoo_finance/
 == TODO 
 
 * Put a limit on how fast you can refresh
+* Make a transaction tab that shows trades done
+** overall history profit/analytics
+* analytics

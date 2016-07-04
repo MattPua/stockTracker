@@ -42,10 +42,11 @@ module.exports=function(app,db){
     let password = req.body.password;
     bcrypt.hash(password,null,null,function(errHashing,hash){
       if (errHashing) console.error(errHashing);
-
+      let newId = new MongoClient.ObjectID();
       db.collection('users').save({
         username: user,
         password: hash,
+        _id: newId,
       },function(err,results){
         console.log(results);
         if (err) {
@@ -54,7 +55,7 @@ module.exports=function(app,db){
           res.json({success: false, error: error});
         }
         else {
-          res.cookie('userId',results._id,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user})
+          res.cookie('userId',newId,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user})
         }
       });
     })

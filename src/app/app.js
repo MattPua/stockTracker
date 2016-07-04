@@ -115,7 +115,6 @@ class App extends React.Component{
     });
     let config = Helper.ajaxConfig('users','POST',data);
     Helper.ajaxCall(this,config,(result,that) =>{
-      console.log(result);
       if (result.success){
         that.setState({
           username: result.username 
@@ -132,8 +131,12 @@ class App extends React.Component{
       password: params.password,
     });
     let config = Helper.ajaxConfig('users/new','POST',data);
-    Helper.ajaxCall(this,config,(result) =>{
+    Helper.ajaxCall(this,config,(result,that) =>{
       if (result.success){
+        that.setState({
+          username: result.username 
+        });
+        that.getStocks();
       }
       else callback(result.error);
     });

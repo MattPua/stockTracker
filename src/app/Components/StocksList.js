@@ -18,14 +18,21 @@ class StocksList extends React.Component{
   getStockListItems(type=''){
     let stockListItems = [];
     let defaultProperties = this.props.defaultProperties.slice(1,this.props.defaultProperties.length);
-    for (let stock of this.props.stocks){
+    if (this.props.stocks.length == 0)
       stockListItems.push(
-        <StockListItem 
-           removeStock={this.props.removeStock} type={type} {...stock} editStock={this.props.editStock} 
-           defaultProperties={defaultProperties} extraProperties={this.props.extraProperties}
-        />
+        <tr>
+          <td colSpan='11' className='center'>No Stocks To Show</td>
+        </tr>
       );
-    }
+    else
+      for (let stock of this.props.stocks){
+        stockListItems.push(
+          <StockListItem 
+             removeStock={this.props.removeStock} type={type} {...stock} editStock={this.props.editStock} 
+             defaultProperties={defaultProperties} extraProperties={this.props.extraProperties}
+          />
+        );
+      }
     return stockListItems;
   }
   onClick(event,value=''){

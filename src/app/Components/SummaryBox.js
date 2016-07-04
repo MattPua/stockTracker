@@ -24,7 +24,7 @@ class SummaryBox extends React.Component{
       totalProfit+=parseFloat(s.profit);
       totalBookValue+=parseFloat(s.bookValue);
     }
-    let percentage =  ( (totalProfit/totalBookValue)*100).toFixed(2);
+    let percentage =  totalBookValue > 0 ? ( (totalProfit/totalBookValue)*100).toFixed(2) : 0.00;
     return percentage;
   }
   getDayProfit(){

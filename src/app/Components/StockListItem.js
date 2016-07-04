@@ -133,8 +133,8 @@ class StockListItem extends React.Component{
         let amount = parseFloat(val);
         let parsedAmount = Helper.getParsedValue(amount);
         if (p == 'change') parsedPercent = Helper.getParsedValue(amount*100,'%',(parseFloat(this.props.price)));
-        else if (p =='priceChange') parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',targetPrice);
-        else if (p == 'profit') parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount,'%',(targetPrice*parseFloat(this.props.sharesOwned)));
+        else if (p =='priceChange') parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount*100,'%',targetPrice);
+        else if (p == 'profit') parsedPercent = targetPrice == 0 ? '0.00%' : Helper.getParsedValue(amount*100,'%',(targetPrice*parseFloat(this.props.sharesOwned)));
 
         if (amount > 0 ){
           hideMed+= " trending_up";

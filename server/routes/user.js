@@ -42,6 +42,7 @@ module.exports=function(app,db){
     let password = req.body.password;
     bcrypt.hash(password,null,null,function(errHashing,hash){
       if (errHashing) console.error(errHashing);
+      // New UserID
       let newId = new MongoClient.ObjectID();
       db.collection('users').save({
         username: user,

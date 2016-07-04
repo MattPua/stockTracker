@@ -98,7 +98,7 @@ class StockListItem extends React.Component{
       let value = this.props[i];
       if (i == 'dividendYield' && value!='N/A') value = value+'%';
       else if (i =='dividendPerShare' && value!='N/A') value = '$'+value;
-      else if (i == 'yearRange' || i =='ask' || i =='bid' || i=='dayRange') value = '$' + value; 
+      else if (i == 'yearRange' || i =='ask' || i =='bid' || i=='dayRange' || i =='previousClose' || i=='open') value = '$' + value; 
       html.push(
         <li className='collection-item'>
           <div>
@@ -261,18 +261,20 @@ class StockListItem extends React.Component{
 
 StockListItem.defaultProps = {
   name: '',
+  open: 0.00,
+  previousClose: 0.00,
   ask: 0.00,
   bid: 0.00,
   symbol: '',
   className: '',
-  change: '0 - %0',
+  change: 0.00,
   dayRange: '0 - 0',
   targetPrice: 0.00,
   sharesOwned: 0,
   price: 0.00,
   _id: '',
   defaultProperties: ['price','change','sharesOwned','targetPrice','priceChange','marketValue','bookValue','volume','profit'],
-  extraProperties: ['ask','bid','dayRange','yearRange','dividendYield','dividendPerShare','dividendPayDate','exDividendDate'],
+  extraProperties: ['open','previousClose','ask','bid','dayRange','yearRange','dividendYield','dividendPerShare','dividendPayDate','exDividendDate'],
 };
 StockListItem.propTypes = {};
 

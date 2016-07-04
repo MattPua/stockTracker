@@ -109,7 +109,7 @@ app.get('/quotes',(req,res)=>{
       }
       query = query.substring(0,query.length-1);
 
-      request('http://finance.yahoo.com/d/quotes.csv?s='+query+'&f=snabcml1vydr1qwo', (error,response,body) =>{
+      request('http://finance.yahoo.com/d/quotes.csv?s='+query+'&f=snabcml1vydr1qwop', (error,response,body) =>{
         if (!error && response.statusCode == 200) {
           let stocksNoFormat = body.split('\n');
           console.log(stocksNoFormat);
@@ -139,6 +139,7 @@ app.get('/quotes',(req,res)=>{
               else if (i ==11)key = 'exDividendDate';
               else if (i ==12) key ='yearRange';
               else if (i ==13) key ='open';
+              else if (i == 14)key='previousClose';
               stock[key] = value;
             }
             for (let s of stocks){

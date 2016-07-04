@@ -31,7 +31,7 @@ class SummaryBox extends React.Component{
     let total = 0.00;
     for (let s of this.props.stocks){
       if (!s.sharesOwned) continue;
-      total+=(parseFloat(s.targetPrice) - parseFloat(s.open));
+      total+=(parseInt(s.sharesOwned))*(parseFloat(s.change));
     }
     return total;
   }
@@ -68,25 +68,22 @@ class SummaryBox extends React.Component{
             </span>
           </div>
           <div className='row'>
-            <div className="col s12 m6 highlight-box">
-              <div className>
+            <div className="col s12 highlight-box">
+              <div className='col s12 m3'>
                 <h5>Total Market Value:</h5>
                 <div>{Helper.getParsedValue(totalMarketValue,'$',null,false)}<i className='material-icons'>{dayProfit > 0 ? 'trending_up' : (dayProfit == 0 ? 'trending_flat' : 'trending_down')}</i></div>
               </div>
-              <div className>
+              <div className='col s12 m3'>
                 <h5>Total Book Value:</h5>
                 <div>{Helper.getParsedValue(totalBookValue,'$',null,false)}</div>
               </div>
-            </div>
-            <div className="col s12 m6 highlight-box">
-              <div className>
+              <div className='col s12 m3'>
                 <h5>Today's Profit:</h5>
                 <div>{Helper.getParsedValue(dayProfit)}</div>
               </div>
-              <div className>
+              <div className='col s12 m3'>
                 <h5>Overall Profit:</h5>
-                <div>{Helper.getParsedValue(totalProfit)}<i className='material-icons'>{dayProfit > 0 ? 'trending_up' : (dayProfit == 0 ? 'trending_flat' : 'trending_down')}</i></div>
-                <div>{Helper.getParsedValue(profitPercentage,'%',null)}</div>
+                <div>{Helper.getParsedValue(totalProfit)} [ {Helper.getParsedValue(profitPercentage,'%',null)} ]<i className='material-icons'>{dayProfit > 0 ? 'trending_up' : (dayProfit == 0 ? 'trending_flat' : 'trending_down')}</i></div>
               </div>
             </div>
           </div>

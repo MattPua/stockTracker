@@ -19,11 +19,7 @@ class StocksList extends React.Component{
     let stockListItems = [];
     let defaultProperties = this.props.defaultProperties.slice(1,this.props.defaultProperties.length);
     if (this.props.stocks.length == 0)
-      stockListItems.push(
-        <tr>
-          <td colSpan='11' className='center'>No Stocks To Show</td>
-        </tr>
-      );
+      stockListItems.push(StockListItem.getNoItemsToShow(type));
     else
       for (let stock of this.props.stocks){
         stockListItems.push(

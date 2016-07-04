@@ -229,6 +229,27 @@ class StockListItem extends React.Component{
     );
   }
 
+  static getNoItemsToShow(type=''){
+    let returnVal = [];
+    if (type == 'mobile')
+      returnVal.push(
+        <div className={'stock-list-item-container mobile-only'}>
+          <div className="card">
+            <div className="card-content">
+               <span className="card-title activator grey-text text-darken-4 truncate">No Stocks to Show</span>
+            </div>
+          </div>
+        </div>
+      );
+    else
+      returnVal.push(
+        <tr>
+          <td colSpan='11' className='center'>No Stocks To Show</td>
+        </tr>
+      );
+  return returnVal;
+  }
+
   render(){
 
     if (this.props.type == 'mobile')

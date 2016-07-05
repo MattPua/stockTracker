@@ -13,6 +13,8 @@ import moment from 'moment';
 var $ = window.jQuery = require('jquery');
 require('materialize-css/sass/materialize.scss');
 require('materialize-css/dist/js/materialize');
+require('font-awesome/scss/font-awesome.scss');
+
 class App extends React.Component{
   constructor(props){
     super(props);

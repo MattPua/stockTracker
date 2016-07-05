@@ -18,7 +18,6 @@ class App extends React.Component{
     super(props);
     this.state = {
       stocks: [],
-      curr: 'CAD',
       lastUpdateTime: moment(),
       sortDirection: 1,
       sortBy: 'name',
@@ -143,7 +142,13 @@ class App extends React.Component{
   }
 
   signout(){
-    console.log('test');
+    this.setState({
+      stocks: [],
+      lastUpdateTime: moment(),
+      sortDirection: 1,
+      sortBy: 'name',
+      username: null,
+    });
   }
 
 

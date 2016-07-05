@@ -31,3 +31,5 @@ Reference: http://www.jarloo.com/yahoo_finance/
 * Make a transaction tab that shows trades done
 ** overall history profit/analytics
 * analytics
+* Favicon
+* better way to use the cookie so you don't have to login every time you go to the page

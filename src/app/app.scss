@@ -1,13 +1,14 @@
+@import './other/main';
 .trending_up {
-  color: #1b5e20;
+  color: $green-highlight;
 }
 
 .trending_down {
-  color: #b71c1c;
+  color: $red-highlight;
 }
 
 .trending_flat {
-  color: #9e9e9e;
+  color: $accent;
 }
 
 h1,h2,h3,h4,h5{

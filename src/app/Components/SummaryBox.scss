@@ -1,6 +1,7 @@
+@import '../other/_colours';
 .summary-box-container .summary-box .highlight-box {
   padding: 30px;
-  background-color: teal;
+  background-color: $secondary;
   color: white;
 }
 

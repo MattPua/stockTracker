@@ -7,7 +7,7 @@ import Helper from './other/apphelper';
 import FixedItems from './Components/FixedItems';
 import Footer from './Components/Footer';
 import Login from './Components/Login';
-import './other/main.scss';
+import './app.scss';
 import moment from 'moment';
 // Note: need this for materialize other wise won't work properly
 var $ = window.jQuery = require('jquery');

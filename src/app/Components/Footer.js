@@ -9,7 +9,7 @@ export default class Footer extends React.Component{
       <footer className="page-footer">
         <div className="footer-copyright">
           <div className="container">
-            © 2016 Matthew Pua
+            Made by <strong>Matt Pua</strong>
             <a className="grey-text text-lighten-4 right" target='_blank' href="https://github.com/MattPua/stockTracker">
               <span className="fa-stack fa-lg">
                 <i className="fa fa-circle fa-stack-2x"></i>

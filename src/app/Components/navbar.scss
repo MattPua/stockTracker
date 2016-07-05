@@ -1,4 +1,8 @@
-.navbar-container .navbar {
-  background-color: #ee6e73;
-  color: white;
+@import '../other/_colours';
+nav.navbar-container {
+  background-color: $primary;
+}
+
+nav.navbar-container .brand-logo{
+  font-family: 'Raleway', sans-serif;
 }

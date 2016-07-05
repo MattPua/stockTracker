@@ -149,7 +149,7 @@ class StockListItem extends React.Component{
           <td className={hideSmall}>{parsedAmount}<br/>{parsedPercent}</td>,
         ];
       }
-      else if (p =='marketValue' || p =='bookValue' || p =='price') val = '$' + (parseFloat(val).toFixed(2));
+      else if (p =='marketValue' || p =='bookValue' || p =='price') val = Helper.getParsedValue(parseFloat(val).toFixed(2),'$',null,false);
       else if (p=='profit') val = Helper.getParsedValue(val);
       else if (p == 'sharesOwned') returnVal = this.getEditableParts();
       else if (p =='targetPrice') continue;

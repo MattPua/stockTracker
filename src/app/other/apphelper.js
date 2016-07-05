@@ -96,13 +96,19 @@ class AppHelper{
 
   static getParsedValue(value,type='$',value2=null,includePositive=true){
     if (type == '$' && includePositive)
-      return (value > 0 ? '+$' : (value == 0 ? '$' :  '-$') ) + (Math.abs(value).toFixed(2));
+      return (value > 0 ? '+$' : (value == 0 ? '$' :  '-$') ) + AppHelper.numberWithCommas(Math.abs(value).toFixed(2));
     else if (type == '$' && !includePositive)
-      return (value > 0 ? '$' : '-$' ) + (Math.abs(value).toFixed(2));
+      return (value >= 0 ? '$' : '-$' ) + AppHelper.numberWithCommas(Math.abs(value).toFixed(2));
     else if (type =='%' && value2 !=null)
       return (value >= 0 ? '':'-') + (Math.abs(value)/parseFloat(value2)).toFixed(2) +'%';
     else if (type == '%' && value2 ==null)
       return (value >= 0 ? '' : '-') + Math.abs(parseFloat(value)).toFixed(2) + '%';
+  }
+
+  static numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   }
 
 }

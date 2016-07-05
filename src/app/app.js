@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import Searchbar from './Components/Searchbar';
 import StocksList from './Components/StocksList';
 import SummaryBox from './Components/SummaryBox';
-import Header from './Components/Header';
+import Navbar from './Components/Navbar';
 import Helper from './other/apphelper';
 import FixedItems from './Components/FixedItems';
 import Footer from './Components/Footer';
@@ -142,26 +142,30 @@ class App extends React.Component{
     });
   }
 
+  signout(){
+    console.log('test');
+  }
+
 
   render(){
     if (this.state.username == null)
       return(
-        <main>
-          <Header className='col s12'/>
+        <div>
+          <Navbar className='col s12'/>
           <Login login={this.login.bind(this)} signup={this.signup.bind(this)}/>
           <Footer/>
-        </main>
+        </div>
       );
     else 
       return (
-        <main className=''>
-          <Header className='col s12'/>
+        <div className=''>
+          <Navbar className='col s12' signout={this.signout.bind(this)} username={this.state.username}/>
           <FixedItems refreshList={this.getStocks.bind(this)}/>
           <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
           <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime} stocks={this.state.stocks}/>
           <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
           <Footer/>
-        </main>
+        </div>
       );
   }
 }

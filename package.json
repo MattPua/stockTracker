@@ -31,7 +31,6 @@
     "materialize-css": "^0.97.6",
     "moment": "^2.13.0",
     "multer": "^1.1.0",
-    "node-uuid": "^1.4.7",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "request": "^2.72.0",

@@ -86,7 +86,7 @@ class App extends React.Component{
       foundItem = foundItem[0];
       existingItems.splice(existingItems.indexOf(foundItem),1);
       that.setState({stocks:existingItems});
-      Materialize.toast('Removed ' + foundItem.symbol, 4000);
+      Materialize.toast('Removed ' + foundItem.name, 4000);
     });
   }
 

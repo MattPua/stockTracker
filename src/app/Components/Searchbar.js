@@ -1,13 +1,39 @@
+import _ from 'underscore';
 class Searchbar extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      query: ''
+      query: '',
+      errors: [],
+      errorMessages:{
+        stock: 'wrong',
+      }
     };
   }
+  isFormValid(){
+    let errors = [];
+    let errorMessages = _.extend({},this.state.errorMessages);
+    if (this.state.query == '' || this.state.query == null)
+      errors.push({key: 'stock',error: 'Please enter a stock symbol!'});
+
+
+    if (errors.length){
+      let i = 0;
+      for (let e of errors){
+        if (i++ == 0) $(this.refs[e.key]).focus();
+        $(this.refs[e.key]).addClass('invalid');
+        errorMessages[e.key] = e.error;
+      }
+    }
+
+    this.setState({errors: errors,errorMessages: errorMessages});
+    if (errors.length) return false;
+    return true;
+  }
+
   onSubmit(event){
     event.preventDefault();
-    if (this.state.query == '') return;
+    if (!this.isFormValid()) return;
     this.props.searchStock(this.state.query);
     this.setState({query: ''});
   }
@@ -20,13 +46,13 @@ class Searchbar extends React.Component{
         <div className={"searchbar " + this.props.className} >
             <form onSubmit={this.onSubmit.bind(this)} action='/quotes' method='POST'>
                 <div className='input-field col s12'>
-                  <label className='active' for='stock' data-error='Symbol Does Not Exist' data-success='Symbol Found'>Symbol</label>
-                  <input className='validate' type="text" placeholder="Stock Name or Symbol" value={this.state.query} onChange={this.onChange.bind(this)} name='stock'/>
+                  <label className='active' for='stock' data-error={this.state.errorMessages.stock}>Symbol</label>
+                  <input className='validate' ref='stock' type="text" placeholder="Stock Name or Symbol" value={this.state.query} onChange={this.onChange.bind(this)} name='stock'/>
                 </div>
                 <div className='input-field col s12'>
                   <button type="submit" className='btn waves-effect waves-light'>
                     Search
-                        <i className="material-icons right">search</i>
+                      <i className="material-icons right">search</i>
                   </button>
                 </div>
             </form>

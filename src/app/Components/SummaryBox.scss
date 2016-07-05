@@ -11,3 +11,10 @@
   top: -10px;
   cursor: pointer;
 }
+
+.summary-box-container .summary-box .trending_up{
+  color: $green-dark-highlight;
+}
+.summary-box-container .summary-box .trending_down{
+  color: $red-light-highlight;
+}

@@ -34,3 +34,5 @@ Reference: http://www.jarloo.com/yahoo_finance/
 * Favicon
 * better way to use the cookie so you don't have to login every time you go to the page
 * lookahead/lookup for symbol names/company names in searchbar
+* add dropdown next to input to select country to prepend the country extension
+* add country flags

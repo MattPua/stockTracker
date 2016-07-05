@@ -35,10 +35,13 @@ module.exports=function(app,db){
       else{
         let stocks = [];
         let query = '';
+        let symbolsUsedInQuery = [];
         for (let s of results){
           let newStock = {};
           newStock = Functions.createObjectFromProperties(s);
           stocks.push(newStock);
+          if (symbolsUsedInQuery.indexOf(s.symbol)>=0) continue;
+          symbolsUsedInQuery.push(s.symbol);
           query+=s.symbol+"+";
         }
         query = query.substring(0,query.length-1);

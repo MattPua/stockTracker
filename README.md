@@ -33,3 +33,4 @@ Reference: http://www.jarloo.com/yahoo_finance/
 * analytics
 * Favicon
 * better way to use the cookie so you don't have to login every time you go to the page
+* lookahead/lookup for symbol names/company names in searchbar

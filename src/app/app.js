@@ -65,6 +65,7 @@ class App extends React.Component{
   getStocks(){
     let config = Helper.ajaxConfig('quotes','GET',null);
     Helper.ajaxCall(this,config, (data,that) =>{
+      console.log(data.stocks);
       let stocks = [];
       for (let stock of data.stocks){
         let newStock = {};
@@ -93,8 +94,8 @@ class App extends React.Component{
   addStock(obj,that){
     let stock = obj.data;
     if (stock.name =='N/A') {Materialize.toast('That Stock Symbol does not exist!',4000); return;}
-    for (let s of that.state.stocks)
-      if (s['symbol'] == undefined) return;
+/*    for (let s of that.state.stocks)
+      if (s['symbol'] == undefined) return;*/
     
     let data = JSON.stringify({
       symbol: stock.symbol,

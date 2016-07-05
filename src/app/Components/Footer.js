@@ -9,7 +9,7 @@ export default class Footer extends React.Component{
         <div className="footer-copyright">
           <div className="container">
             © 2016 Matthew Pua
-            <a className="grey-text text-lighten-4 right" href="#!">More Links</a>
+            <a className="grey-text text-lighten-4 right" href="https://github.com/MattPua/stockTracker">Github</a>
           </div>
         </div>
       </footer>

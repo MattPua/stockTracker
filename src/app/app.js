@@ -150,22 +150,30 @@ class App extends React.Component{
   render(){
     if (this.state.username == null)
       return(
-        <div>
+      <div className='content-container'>
+        <header>
           <Navbar className='col s12'/>
+        </header>
+        <main>
           <Login login={this.login.bind(this)} signup={this.signup.bind(this)}/>
-          <Footer/>
-        </div>
+        </main>
+        <Footer/>
+      </div>
       );
     else 
       return (
-        <div className=''>
+      <div className='content-container'>
+        <header>
           <Navbar className='col s12' signout={this.signout.bind(this)} username={this.state.username}/>
+        </header>
+        <main>
           <FixedItems refreshList={this.getStocks.bind(this)}/>
           <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
           <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime} stocks={this.state.stocks}/>
           <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
-          <Footer/>
-        </div>
+        </main>
+        <Footer/>
+      </div>
       );
   }
 }

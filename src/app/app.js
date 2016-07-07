@@ -37,16 +37,16 @@ class App extends React.Component{
     Helper.ajaxCall(this, config, this.addStock);
   }
   componentDidUpdate(prevProps,prevState){
-    if (this.state.username== null || this.state.username == '') return;
+    if (this.state.username=== null || this.state.username == '') return;
 
     if (prevState.sortBy != this.state.sortBy || prevState.sortDirection != this.state.sortDirection)
       this.getStocks();
   }
 
   editStock(symbol,properties){
-    let data = JSON.stringify({properties: properties});
+    let valuesToEdit = JSON.stringify({properties: properties});
     //TODO: Should be ID
-    let config = Helper.ajaxConfig('quotes/'+symbol,'POST',data);
+    let config = Helper.ajaxConfig('quotes/'+symbol,'POST',valuesToEdit);
     //TODO: Really inefficient process here
     Helper.ajaxCall(this,config,(data,that) =>{
       setTimeout(function(){
@@ -156,7 +156,7 @@ class App extends React.Component{
 
 
   render(){
-    if (this.state.username == null)
+    if (this.state.username === null)
       return(
       <div className='content-container'>
         <header>
@@ -168,21 +168,20 @@ class App extends React.Component{
         <Footer/>
       </div>
       );
-    else 
-      return (
-      <div className='content-container'>
-        <header>
-          <Navbar className='col s12' signout={this.signout.bind(this)} username={this.state.username}/>
-        </header>
-        <main>
-          <FixedItems refreshList={this.getStocks.bind(this)}/>
-          <Searchbar  className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
-          <SummaryBox className='col s12'  lastUpdateTime={this.state.lastUpdateTime} stocks={this.state.stocks}/>
-          <StocksList  className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
-        </main>
-        <Footer/>
-      </div>
-      );
+    return (
+    <div className='content-container'>
+      <header>
+        <Navbar className='col s12' signout={this.signout.bind(this)} username={this.state.username}/>
+      </header>
+      <main>
+        <FixedItems refreshList={this.getStocks.bind(this)}/>
+        <Searchbar className='col s12'searchStock={this.searchStock.bind(this)} addStock={this.addStock.bind(this)}/>
+        <SummaryBox className='col s12' lastUpdateTime={this.state.lastUpdateTime} stocks={this.state.stocks}/>
+        <StocksList className='col s12'stocks={this.state.stocks} removeStock={this.removeStock.bind(this)} changeSortBy={this.changeSortBy.bind(this)}sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} editStock={this.editStock.bind(this)}/>
+      </main>
+      <Footer/>
+    </div>
+    );
   }
 }
 window.moment = moment;

@@ -26,6 +26,10 @@ app.use(webpackMiddleware(compiler,{
     chunks: false,
     'errors-only': true
   },
+  port: process.env.PORT || 8080,
+  contentBase: './src',
+  // Set this if you want to enable gzip compression for assets
+  compress: true,
   publicPath: webpackConfig.output.publicPath
 }));
 app.use(webpackHotMiddleware(compiler,{

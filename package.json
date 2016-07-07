@@ -4,8 +4,7 @@
   "description": "",
   "main": "src/client/app.js",
   "scripts": {
-    "build": "webpack",
-    "production": "webpack -p",
+    "production": "cross-env NODE_ENV=production webpack -p",
     "preghpages": "npm run build && rm -rf gh-pages && cp -r src gh-pages && cp index.html build/* gh-pages",
     "ghpages": "npm run preghpages && ghpages -p gh-pages",
     "gh-pages": "npm run ghpages",
@@ -39,8 +38,15 @@
     "webpack": "^1.13.1"
   },
   "devDependencies": {
+    "autoprefixer": "^6.3.7",
+    "babel-eslint": "^6.1.0",
     "babel-plugin-react-transform": "^2.0.0-beta1",
+    "cross-env": "^1.0.8",
     "css-loader": "^0.23.1",
+    "eslint": "^3.0.1",
+    "eslint-friendly-formatter": "^2.0.5",
+    "eslint-loader": "^1.4.1",
+    "eslint-plugin-react": "^5.2.2",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "ghpages": "0.0.8",

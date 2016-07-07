@@ -30,8 +30,9 @@ class AppHelper{
 
   static convertArrayFromFirebase(item,key){
     let array = [];
-    for (let j in item[key])
+    for (let j in item[key]){
       array.push(item[key][j]);
+    }
     return array;
   }
 
@@ -85,13 +86,14 @@ class AppHelper{
     return function(a,b){
       let aValue = a[property];
       let bValue = b[property];
+      let result = null;
       if (listOfNumProps.indexOf(property) >=0 ) {
         aValue = parseFloat(aValue);
         bValue = parseFloat(bValue);
       }
-      var result = (aValue < bValue) ? -1 : (aValue > bValue) ? 1 : 0;
+      result = (aValue < bValue) ? -1 : (aValue > bValue) ? 1 : 0;
       return result * direction;
-    }
+    };
   }
 
   static getParsedValue(value,type='$',value2=null,includePositive=true){

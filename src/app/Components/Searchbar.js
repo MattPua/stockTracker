@@ -47,7 +47,7 @@ class Searchbar extends React.Component{
             <form onSubmit={this.onSubmit.bind(this)} action='/quotes' method='POST'>
                 <div className='input-field col s12 m10'>
                   <i className='material-icons prefix'>search</i>
-                  <label className='active' for='stock' data-error={this.state.errorMessages.stock} id='stock'>Symbol</label>
+                  <label className='active' htmlFor='stock' data-error={this.state.errorMessages.stock} id='stock'>Symbol</label>
                   <input className='validate' ref='stock' type="text" placeholder="Stock Name or Symbol" value={this.state.query} onChange={this.onChange.bind(this)} name='stock'/>
                 </div>
                 <div className='input-field col s12 m2 right hide-on-small-only'>

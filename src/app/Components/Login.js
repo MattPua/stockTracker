@@ -83,13 +83,13 @@ export default class Login extends React.Component{
             <div className="row">
               <div className="input-field col s12">
                 <input id="username" type="text" className="validate" value={this.state.username} ref='username' onChange={this.onUserChange.bind(this)}/>
-                <label className='active' for="username" data-error={this.state.errorMessages.username}>Username</label>
+                <label className='active' htmlFor="username" data-error={this.state.errorMessages.username}>Username</label>
               </div>
             </div>
             <div className="row">
               <div className="input-field col s12">
                 <input id="password" type="password" className="validate" value={this.state.password} ref='password' onChange={this.onPasswordChange.bind(this)}/>
-                <label className='active' for="password" data-error={this.state.errorMessages.password}>Password</label>
+                <label className='active' htmlFor="password" data-error={this.state.errorMessages.password}>Password</label>
               </div>
             </div>
             <button className="btn waves-effect waves-light" type="submit" name="action" onClick={this.login.bind(this)}>Login

@@ -74,11 +74,11 @@ class StockListItem extends React.Component{
     if (this.state.editMode){
       return[
         <td>  
-          <label for='sharesOwned' className='hide-on-small-only'>Shares Owned</label>
+          <label htmlFor='sharesOwned' className='hide-on-small-only'>Shares Owned</label>
           <input type='text' value={this.state.sharesOwned} placeholder='Shares Owned' name='sharesOwned' onChange={this.onSharesOwnedChange.bind(this)}/>
         </td>,
         <td>
-          <label for='targetPrice'  className='hide-on-small-only'>Target Price</label>
+          <label htmlFor='targetPrice'  className='hide-on-small-only'>Target Price</label>
           <input type='text' value={this.state.targetPrice}  placeholder='Target Price' name='targetPrice' onChange={this.onTargetPriceChange.bind(this)}/>
         </td>
       ];
@@ -120,7 +120,7 @@ class StockListItem extends React.Component{
   getValues(){
     let properties = this.props.defaultProperties;
     let td = [];
-    let targetPrice = parseFloat(this.props['targetPrice']);
+    let targetPrice = parseFloat(this.props.targetPrice);
 
     for (let p of properties){
       let val = this.props[p];

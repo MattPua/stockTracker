@@ -26,7 +26,7 @@ module.exports=function(app,db){
         bcrypt.compare(password,results.password,function(error,result){
           if (error) console.error(error);
           if (!result)res.json({success: false,error: 'Username/password combination was incorrect'});
-          else res.cookie('userId',results._id,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user}); 
+          else res.cookie('userId',results._id,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user,userId: results._id}); 
         });
       }
     });
@@ -56,7 +56,7 @@ module.exports=function(app,db){
           res.json({success: false, error: error});
         }
         else {
-          res.cookie('userId',newId,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user})
+          res.cookie('userId',newId,{ maxAge: 900000, httpOnly: true}).send({success: true, username: user,userId: newId});
         }
       });
     })

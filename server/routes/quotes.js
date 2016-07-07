@@ -6,11 +6,12 @@ import request from 'request';
 module.exports=function(app,db){
   // AddStock()
   app.post('/quotes/new',(req,res)=>{
-    if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
+    let userId = null;
+    if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.params) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
     console.log('saving stock');
     util.log(util.inspect(req.body));
     let stock = req.body;
-    stock.userId = new MongoClient.ObjectID(req.cookies.userId);
+    stock.userId = new MongoClient.ObjectID(userId);
     db.collection('quotes').save(stock, (err,results) => {
       if (err) {
         console.error(err);
@@ -23,10 +24,11 @@ module.exports=function(app,db){
 
   // GetStocks()
   app.get('/quotes',(req,res)=>{
-    if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
+    let userId = null;
+    if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.params) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
 
     let cursor = db.collection('quotes').find({
-      userId: new MongoClient.ObjectID(req.cookies.userId),
+      userId: new MongoClient.ObjectID(userId),
     }).toArray(function(err,results){
       if (err) {
         console.error(err);
@@ -98,7 +100,8 @@ module.exports=function(app,db){
 
   // EditStock()
   app.post('/quotes/:id',(req,res)=>{
-    if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
+    let userId = null;
+    if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.params) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
 
     let id =req.params.id
     util.log(util.inspect(req.body));
@@ -107,7 +110,7 @@ module.exports=function(app,db){
     let targetPrice = parseFloat(properties.targetPrice).toFixed(2);
     let sharesOwned = parseInt(properties.sharesOwned);
     db.collection('quotes').update(
-      { '_id' : new MongoClient.ObjectID(id), 'userId' : new MongoClient.ObjectID(req.cookies.userId) },
+      { '_id' : new MongoClient.ObjectID(id), 'userId' : new MongoClient.ObjectID(userId) },
       {
         $set: { 'targetPrice' : targetPrice, 'sharesOwned': sharesOwned},
         $currentDate: { 'lastModified': true}
@@ -126,10 +129,12 @@ module.exports=function(app,db){
 
   // RemoveStock()
   app.post('/quotes/:id/delete',(req,res)=>{
+    let userId = null;
+    if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.params) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
     util.log(util.inspect(req.body));
     let id =req.params.id
     // Should be by ID
-    db.collection('quotes').deleteOne({_id: new MongoClient.ObjectID(id), userId: new MongoClient.ObjectID(req.cookies.userId)},(err,result) =>{
+    db.collection('quotes').deleteOne({_id: new MongoClient.ObjectID(id), userId: new MongoClient.ObjectID(userId)},(err,result) =>{
       if (err) console.error(err);
       res.json({id: id});
     });
@@ -138,7 +143,8 @@ module.exports=function(app,db){
 
   // SearchStock()
   app.get('/quotes/search?',(req,res)=>{
-    if (!Functions.isSignedIn(req.cookies)) {res.json({success: false, error: 'Not Signed In'}); return;}
+    let userId = null;
+    if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.params) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
 
     let symbol = req.query.symbol;
     util.log(util.inspect(req.body));

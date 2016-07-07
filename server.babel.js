@@ -16,11 +16,9 @@ import cors from 'cors';
 const app = express();
 const compiler = webpack(webpackConfig);
 
-app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-//app.use(multer()); // for parsing multipart/form-data
 
 if (!process.env.NODE_ENV){
   app.use(express.static(__dirname + '/src'));
@@ -44,7 +42,7 @@ if (!process.env.NODE_ENV){
 app.use(expressWinston.logger({
   transports: [
     new winston.transports.Console({
-      json: true,
+      json: false,
       colorize: true
     })
   ],
@@ -62,6 +60,10 @@ app.use(expressWinston.errorLogger({
     })
   ]
 }));
+app.options('*', cors()); // include before other routes
+
+
+
 
 let db;
 MongoClient.connect('mongodb://'+DBConfig.MONGO_USERNAME+':'+DBConfig.MONGO_PASSWORD+DBConfig.MONGO_APP,(err,database) =>{

@@ -19,10 +19,8 @@ export function createObjectFromProperties(object){
   return obj;
 }
 
-export function isSignedIn(cookie){
-  if (cookie == null || cookie.userId == null){
-    console.error('User attempting to access function without being signed in');
-    return false;
-  }
-  return true;
+export function isSignedIn(cookies,body,params){
+  let userId = ( (cookies ? cookies.userId : null) || body.userId || params.userId || null);
+  if (userId == null)console.error('User attempting to access function without being signed in');
+  return userId;
 }

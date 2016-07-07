@@ -19,8 +19,8 @@ export function createObjectFromProperties(object){
   return obj;
 }
 
-export function isSignedIn(cookies,body,params){
-  let userId = ( (cookies && cookies.userId ? cookies.userId : null) || body.userId || params.userId || null);
+export function isSignedIn(cookies,body,query){
+  let userId = ( (cookies && cookies.userId ? cookies.userId : null) || body.userId || query.userId || null);
   if (userId == null)console.error('User attempting to access function without being signed in');
   return userId;
 }

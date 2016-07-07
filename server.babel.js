@@ -18,23 +18,26 @@ app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 //app.use(multer()); // for parsing multipart/form-data
-app.use(express.static(__dirname + '/src'));
-// TODO: Development Mode Only
-app.use(webpackMiddleware(compiler,{
-  stats: {
-    colors: true,
-    chunks: false,
-    'errors-only': true
-  },
-  port: process.env.PORT || 8080,
-  contentBase: './src',
-  // Set this if you want to enable gzip compression for assets
-  compress: true,
-  publicPath: webpackConfig.output.publicPath
-}));
-app.use(webpackHotMiddleware(compiler,{
-  log: console.log
-}));
+
+if (!process.env.NODE_ENV){
+  app.use(express.static(__dirname + '/src'));
+  app.use(webpackMiddleware(compiler,{
+    stats: {
+      colors: true,
+      chunks: false,
+      'errors-only': true
+    },
+    port: process.env.PORT || 8080,
+    contentBase: './src',
+    // Set this if you want to enable gzip compression for assets
+    compress: true,
+    publicPath: webpackConfig.output.publicPath
+  }));
+  app.use(webpackHotMiddleware(compiler,{
+    log: console.log
+  }));
+}
+
 app.use(expressWinston.logger({
   transports: [
     new winston.transports.Console({

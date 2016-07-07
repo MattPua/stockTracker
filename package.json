@@ -9,7 +9,7 @@
     "ghpages": "npm run preghpages && ghpages -p gh-pages",
     "gh-pages": "npm run ghpages",
     "server": "nodemon server.js",
-    "check":"npm-check"
+    "check": "npm-check"
   },
   "author": "",
   "license": "ISC",
@@ -30,18 +30,19 @@
     "jquery": "^2.2.4",
     "materialize-css": "^0.97.6",
     "moment": "^2.13.0",
+    "mongodb": "^2.1.18",
     "multer": "^1.1.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "request": "^2.72.0",
     "underscore": "^1.8.3",
-    "util": "^0.10.3",
-    "webpack": "^1.13.1"
+    "util": "^0.10.3"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.7",
     "babel-eslint": "^6.1.0",
     "babel-plugin-react-transform": "^2.0.0-beta1",
+    "babel-register": "^6.9.0",
     "cross-env": "^1.0.8",
     "css-loader": "^0.23.1",
     "eslint": "^3.0.1",
@@ -64,6 +65,9 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
-    "webpack-dev-server": "1.14.0"
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-server": "1.14.0",
+    "webpack-hot-middleware": "^2.12.1",
+    "winston": "^2.2.0"
   }
 }

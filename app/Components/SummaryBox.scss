@@ -1,0 +1,20 @@
+@import '../other/_colours';
+.summary-box-container .summary-box .highlight-box {
+  padding: 30px;
+  background-color: $secondary;
+  color: white;
+}
+
+.summary-box-container .summary-box .day-profit i{
+  font-size: 16px;
+  position: relative;
+  top: -10px;
+  cursor: pointer;
+}
+
+.summary-box-container .summary-box .trending_up{
+  color: $green-dark-highlight;
+}
+.summary-box-container .summary-box .trending_down{
+  color: $red-light-highlight;
+}

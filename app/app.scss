@@ -1,0 +1,28 @@
+@import './other/main';
+.trending_up {
+  color: $green-highlight;
+}
+
+.trending_down {
+  color: $red-highlight;
+}
+
+.trending_flat {
+  color: $accent;
+}
+
+h1,h2,h3,h4,h5{
+  font-family: 'Raleway', sans-serif;
+}
+
+
+// For Fixed Sticky Footer
+body, .content-container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}

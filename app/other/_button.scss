@@ -1,0 +1,11 @@
+@import '../other/_colours';
+button.btn {
+  background-color: $accent;
+}
+button.btn:focus,button.btn:hover{
+  background-color: $secondary-accent;
+}
+
+.btn.btn-floating {
+  background-color: $red-highlight;
+}

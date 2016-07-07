@@ -37,7 +37,7 @@ class AppHelper{
   }
 
   static ajaxConfig(url,type,data){
-    let base = '';//false ? 'http://159.203.3.185:3000/' : '';
+    let base = 'http://159.203.3.185:3000/';
     return {
       url: base + url,
       type: type,

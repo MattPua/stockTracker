@@ -61,7 +61,7 @@ app.use(expressWinston.errorLogger({
   ]
 }));
 app.options('*', cors()); // include before other routes
-
+app.use(cors());
 
 
 

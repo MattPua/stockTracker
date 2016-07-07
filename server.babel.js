@@ -11,9 +11,12 @@ import bodyParser from 'body-parser';
 import winston from 'winston';
 import expressWinston from 'express-winston';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+
 const app = express();
 const compiler = webpack(webpackConfig);
 
+app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded

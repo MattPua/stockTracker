@@ -38,7 +38,7 @@ class AppHelper{
 
   static ajaxConfig(url,type,data){
     return {
-      url: url,
+      url: 'http://159.203.3.185:3000/'+url,
       type: type,
       dataType: "json",
       data:data,

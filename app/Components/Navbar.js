@@ -23,7 +23,12 @@ export default class Navbar extends React.Component{
     if (this.props.username!=null && this.props.username!='')
       return(
         <ul className="right hide-on-med-and-down">
-          <li className='active truncate'><a href="#!"><i className="material-icons left" >perm_identity</i>{this.props.username}</a></li>
+          <li className='active truncate'>
+            <a className='valign-wrapper' href="#!">
+              <span className='name valign'>{this.props.username[0]}</span>
+              <span>{this.props.username}</span>
+            </a>
+          </li>
           <li className="divider"></li>
           <li><a href="#!" onClick={this.onClick.bind(this)}><i className="material-icons right" >lock_open</i>Sign Out</a></li>
         </ul>
@@ -36,7 +41,11 @@ export default class Navbar extends React.Component{
       return[
         <a href="#" data-activates="mobile-nav" className="button-collapse" ref='mobileDropdown'><i className="material-icons">menu</i></a>,
         <ul className="side-nav" id="mobile-nav">
-          <li className='active truncate'><a href="#!"><i className="material-icons right" >perm_identity</i>{this.props.username}</a></li>
+          <li className='active truncate'>
+            <a className='valign-wrapper' href="#!">
+              <span className='name valign left'>{this.props.username[0]}</span><span>{this.props.username}</span>
+            </a>
+          </li>
           <li className="divider"></li>
           <li><a href="#!" onClick={this.onClick.bind(this)}><i className="material-icons right" >lock_open</i>Sign Out</a></li>
         </ul>

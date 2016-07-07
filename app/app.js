@@ -24,16 +24,14 @@ class App extends React.Component{
       sortDirection: 1,
       sortBy: 'name',
       username: null,
+      userId: null
     };
   }
   componentDidUpdate(prevProps,prevState){
   }
-  componentDidMount(){
-    // this.getStocks();
-  }
   searchStock(stock){
     let that = this;
-    let config = Helper.ajaxConfig('quotes/search?symbol='+stock,'GET',null);
+    let config = Helper.ajaxConfig('quotes/search?userId='+this.state.userId+'&symbol='+stock,'GET',null);
     Helper.ajaxCall(this, config, this.addStock);
   }
   componentDidUpdate(prevProps,prevState){
@@ -44,7 +42,10 @@ class App extends React.Component{
   }
 
   editStock(symbol,properties){
-    let valuesToEdit = JSON.stringify({properties: properties});
+    let valuesToEdit = JSON.stringify({
+      properties: properties,
+      userId: this.state.id
+    });
     //TODO: Should be ID
     let config = Helper.ajaxConfig('quotes/'+symbol,'POST',valuesToEdit);
     //TODO: Really inefficient process here
@@ -63,7 +64,7 @@ class App extends React.Component{
   }
 
   getStocks(){
-    let config = Helper.ajaxConfig('quotes','GET',null);
+    let config = Helper.ajaxConfig('quotes?userId='+this.state.userId,'GET',null);
     Helper.ajaxCall(this,config, (data,that) =>{
       console.log(data.stocks);
       let stocks = [];
@@ -78,7 +79,9 @@ class App extends React.Component{
     });
   }
   removeStock(id){
-    let config = Helper.ajaxConfig('quotes/'+id+'/delete','POST',{});
+    let config = Helper.ajaxConfig('quotes/'+id+'/delete','POST',{
+      userId: this.state.id
+    });
     Helper.ajaxCall(this,config,(result,that) =>{
       let existingItems = that.state.stocks;
       let foundItem = $.grep(existingItems,function(e){
@@ -102,9 +105,10 @@ class App extends React.Component{
       name: stock.name,
       targetPrice: 0.00,
       sharesOwned: 0,
+      userId: that.state.id
     });
     let config = Helper.ajaxConfig('quotes/new','POST',data);
-    Helper.ajaxCall(this,config,(result)=>{
+    Helper.ajaxCall(that,config,(result)=>{
       Materialize.toast('Added ' + stock.name, 4000);
       that.getStocks();
     });
@@ -119,7 +123,8 @@ class App extends React.Component{
     Helper.ajaxCall(this,config,(result,that) =>{
       if (result.success){
         that.setState({
-          username: result.username 
+          username: result.username,
+          userId: result.userId
         });
         that.getStocks();
       }
@@ -136,7 +141,8 @@ class App extends React.Component{
     Helper.ajaxCall(this,config,(result,that) =>{
       if (result.success){
         that.setState({
-          username: result.username 
+          username: result.username,
+          userId: result.userId
         });
         that.getStocks();
       }

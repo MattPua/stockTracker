@@ -1,8 +1,27 @@
 @import '../other/_colours';
+@import '../other/_mediaQuery';
 nav.navbar-container {
   background-color: $primary;
 }
 
 nav.navbar-container .brand-logo{
   font-family: 'Raleway', sans-serif;
+}
+nav.navbar-container .name {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  background: $accent;
+  line-height: 39px;
+  margin-right: 20px;
+  text-transform: capitalize;
+  border: 2px solid $accent;
+  font-family: 'Raleway', sans-serif;
+  @media (max-width:$size-m-max){
+    position: relative;
+    top: 10px;
+  }
 }

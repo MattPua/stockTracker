@@ -8,7 +8,8 @@
     "preghpages": "npm run build && rm -rf gh-pages && cp -r src gh-pages && cp index.html build/* gh-pages",
     "ghpages": "npm run preghpages && ghpages -p gh-pages",
     "gh-pages": "npm run ghpages",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "check":"npm-check"
   },
   "author": "",
   "license": "ISC",
@@ -55,9 +56,8 @@
     "jsx-loader": "^0.13.2",
     "node-sass": "^3.7.0",
     "nodemon": "^1.9.2",
+    "npm-check": "^5.2.2",
     "react-hot-loader": "^1.3.0",
-    "react-tools": "^0.13.3",
-    "react-transform": "0.0.3",
     "react-transform-hmr": "^1.0.4",
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.2.0",

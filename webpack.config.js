@@ -1,12 +1,12 @@
-var webpack = require('webpack');
-var path = require('path');
-var autoprefixer = require('autoprefixer');
+var webpack           = require('webpack');
+var path              = require('path');
+var autoprefixer      = require('autoprefixer');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-var BUILD_DIR = path.resolve(__dirname, './build');
-var APP_DIR = path.resolve(__dirname, 'src/app');
+var BUILD_DIR         = path.resolve(__dirname, './build');
+var APP_DIR           = path.resolve(__dirname, 'src/app');
 
-var IS_PRODUCTION = process.env.NODE_ENV === 'production';
+var IS_PRODUCTION     = process.env.NODE_ENV === 'production';
 if (IS_PRODUCTION) console.log("----------------PRODUCTION MODE--------------------");
 else console.log('-------------------DEVELOPMENT MODE--------------------');
 
@@ -28,10 +28,12 @@ var plugins = [
   // Aggressively remove duplicate modules:
   new webpack.optimize.DedupePlugin()
 ];
+var entries = [APP_DIR + '/app.js',];
+
 if (IS_PRODUCTION){
   plugins.push(
     // Uglify in production.
-    new webpack.optimize.UglifyJsPlugin({
+/*    new webpack.optimize.UglifyJsPlugin({
       mangle: {
         except: ['$super', '$', 'exports', 'require']
       },
@@ -39,28 +41,26 @@ if (IS_PRODUCTION){
       exclude: [ /\.min\.js$/gi ],   // skip pre-minified libs
       sourcemap: false,
       minimize: true
-    })
+    })*/
   );
 }
 else{
   plugins.push(
     new webpack.HotModuleReplacementPlugin()
   );
+  entries.push(
+    // Add entry to connect hot loading middleware from page
+    'webpack-hot-middleware/client',
+    'webpack/hot/dev-server'
+  );
 }
 
 const config = {
-  // Add entry to connect hot loading middleware from page
-  entry: [
-    'webpack-hot-middleware/client',
-    APP_DIR + '/app.js',
-    'webpack/hot/dev-server',
-  //'webpack-dev-server/client?http://0.0.0.0:8080', //WebpackDevServer host and port
-  //'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-  ],
+  entry: entries,
   output: {
     path: BUILD_DIR,
     filename: 'bundle.js',
-    publicPath: '/',
+    publicPath: '',
   },
   // `webpack-dev-server` spawns a live-reloading HTTP server for your project.
   devServer: {

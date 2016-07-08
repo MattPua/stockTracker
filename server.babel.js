@@ -1,5 +1,5 @@
 import MongoClient from 'mongodb';
-import DBConfig from './_config';
+import config from './_config';
 // Note: Need to use the babel file otherwise cannot use es6 style
 import path from 'path';
 import express from 'express';
@@ -12,9 +12,15 @@ import winston from 'winston';
 import expressWinston from 'express-winston';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import http from 'http';
+import https from 'https';
+import fs from 'fs';
 
 const app = express();
 const compiler = webpack(webpackConfig);
+const privateKey = null;//fs.readFileSync('sslcert/server.key','utf8');
+const certificate = null;//fs.readFileSync('sslcert/server.crt','utf8');
+const credentials = {key: privateKey, cert: certificate};
 
 app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
@@ -62,20 +68,14 @@ app.use(expressWinston.errorLogger({
 }));
 app.options('*', cors()); // include before other routes
 app.use(cors());
-
-
-
-let db;
-MongoClient.connect('mongodb://'+DBConfig.MONGO_USERNAME+':'+DBConfig.MONGO_PASSWORD+DBConfig.MONGO_APP,(err,database) =>{
+MongoClient.connect('mongodb://'+config.MONGO_USERNAME+':'+config.MONGO_PASSWORD+config.MONGO_APP,(err,database) =>{
   if(err) return console.error(err);
-  db = database;
-
-  let server = app.listen(3000, function () {
-    let host = server.address().address;
-    let port = server.address().port;
-    console.log("App listening @ http://%s:%s",host,port);
-    let routes = require('./server/routes/_main')(app,db);
-  });
+  let routes = require('./server/routes/_main')(app,database);
 });
 
-
+let httpServer = http.createServer(app).listen(config.PORT,config.IP,function(){
+    console.log('HTTP Server running at '+config.IP+":"+config.PORT);
+  });
+let httpsServer = https.createServer(credentials,app).listen(config.SSL_PORT,config.IP,function(){
+    console.log('HTTPS Server running at '+config.IP+":"+config.SSL_PORT);
+  });

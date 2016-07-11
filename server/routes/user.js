@@ -14,7 +14,7 @@ module.exports=function(app,db){
 
     // Password needs to be hashed and salted
     let password = req.body.password;
-
+    console.log('Checking Database for user:'+user);
     db.collection('users').findOne({
       username: user,
     },function(err,results){
@@ -30,6 +30,7 @@ module.exports=function(app,db){
         });
       }
     });
+    console.log('after');
   });
 
   //Signup

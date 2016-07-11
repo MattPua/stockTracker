@@ -9,7 +9,7 @@
     "ghpages": "npm run preghpages && ghpages -p gh-pages",
     "gh-pages": "npm run ghpages",
     "server": "nodemon server.js",
-    "deploy": "NODE_ENV=production node server.js",
+    "deploy": "cross-env NODE_ENV=production node server.js",
     "check": "npm-check"
   },
   "author": "",

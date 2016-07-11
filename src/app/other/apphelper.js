@@ -37,7 +37,7 @@ class AppHelper{
   }
 
   static ajaxConfig(url,type,data){
-    let base = '';
+    let base = 'api/';
     return {
       url: base + url,
       type: type,

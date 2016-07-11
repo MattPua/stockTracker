@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt-nodejs';
 module.exports=function(app,db){
 
   //Login
-  app.post('/users',(req,res) =>{
+  app.post('/api/users',(req,res) =>{
     util.log(util.inspect(req.body));
 
     let user = req.body.username;
@@ -33,7 +33,7 @@ module.exports=function(app,db){
   });
 
   //Signup
-  app.post('/users/new',(req,res)=>{
+  app.post('/api/users/new',(req,res)=>{
     util.log(util.inspect(req.body));
 
     let user = req.body.username;

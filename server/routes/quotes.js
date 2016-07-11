@@ -5,7 +5,7 @@ import MongoClient from 'mongodb';
 import request from 'request';
 module.exports=function(app,db){
   // AddStock()
-  app.post('/quotes/new',(req,res)=>{
+  app.post('/api/quotes/new',(req,res)=>{
     let userId = null;
     if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.query) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
     console.log('saving stock');
@@ -23,7 +23,7 @@ module.exports=function(app,db){
   });
 
   // GetStocks()
-  app.get('/quotes',(req,res)=>{
+  app.get('/api/quotes',(req,res)=>{
     let userId = null;
     if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.query) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
 
@@ -99,7 +99,7 @@ module.exports=function(app,db){
   });
 
   // EditStock()
-  app.post('/quotes/:id',(req,res)=>{
+  app.post('/api/quotes/:id',(req,res)=>{
     let userId = null;
     if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.query) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
 
@@ -128,7 +128,7 @@ module.exports=function(app,db){
 
 
   // RemoveStock()
-  app.post('/quotes/:id/delete',(req,res)=>{
+  app.post('/api/quotes/:id/delete',(req,res)=>{
     let userId = null;
     if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.query) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
     util.log(util.inspect(req.body));
@@ -142,7 +142,7 @@ module.exports=function(app,db){
   });
 
   // SearchStock()
-  app.get('/quotes/search?',(req,res)=>{
+  app.get('/api/quotes/search?',(req,res)=>{
     let userId = null;
     if ( ( userId = Functions.isSignedIn(req.cookies,req.body,req.query) ) == null) {res.json({success: false, error: 'Not Signed In'}); return;}
 

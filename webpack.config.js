@@ -33,7 +33,7 @@ var entries = [APP_DIR + '/app.js',];
 if (IS_PRODUCTION){
   plugins.push(
     // Uglify in production.
-/*    new webpack.optimize.UglifyJsPlugin({
+    new webpack.optimize.UglifyJsPlugin({
       mangle: {
         except: ['$super', '$', 'exports', 'require']
       },
@@ -41,7 +41,7 @@ if (IS_PRODUCTION){
       exclude: [ /\.min\.js$/gi ],   // skip pre-minified libs
       sourcemap: false,
       minimize: true
-    })*/
+    })
   );
 }
 else{

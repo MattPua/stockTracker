@@ -79,9 +79,10 @@ class App extends React.Component{
     });
   }
   removeStock(id){
-    let config = Helper.ajaxConfig('quotes/'+id+'/delete','POST',{
+    let data =JSON.stringify({
       userId: this.state.userId
     });
+    let config = Helper.ajaxConfig('quotes/'+id+'/delete','POST',data);
     Helper.ajaxCall(this,config,(result,that) =>{
       let existingItems = that.state.stocks;
       let foundItem = $.grep(existingItems,function(e){

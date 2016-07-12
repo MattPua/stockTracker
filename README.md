@@ -37,3 +37,4 @@ Reference: http://www.jarloo.com/yahoo_finance/
 * add dropdown next to input to select country to prepend the country extension
 * add country flags
 * indicate currency being used
+* Calendar for Dividend Dates

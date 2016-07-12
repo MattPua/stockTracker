@@ -1,0 +1,17 @@
+{
+  "apps":[
+    {
+      "name":"stockTracker",
+      "script":"./server.js",
+      "instances":1,
+      "exec_mode":"fork",
+      "env":{
+        "NODE_ENV":"production",
+        "PORT":"3000",
+      },
+      "node_args":[
+        "--max-old-space-size=200"
+      ]
+    }
+  ]
+}

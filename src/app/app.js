@@ -105,7 +105,7 @@ class App extends React.Component{
       name: stock.name,
       targetPrice: 0.00,
       sharesOwned: 0,
-      userId: that.state.id
+      userId: that.state.userId
     });
     let config = Helper.ajaxConfig('quotes/new','POST',data);
     Helper.ajaxCall(that,config,(result)=>{

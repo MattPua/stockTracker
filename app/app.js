@@ -44,7 +44,7 @@ class App extends React.Component{
   editStock(symbol,properties){
     let valuesToEdit = JSON.stringify({
       properties: properties,
-      userId: this.state.id
+      userId: this.state.userId
     });
     //TODO: Should be ID
     let config = Helper.ajaxConfig('quotes/'+symbol,'POST',valuesToEdit);
@@ -80,7 +80,7 @@ class App extends React.Component{
   }
   removeStock(id){
     let config = Helper.ajaxConfig('quotes/'+id+'/delete','POST',{
-      userId: this.state.id
+      userId: this.state.userId
     });
     Helper.ajaxCall(this,config,(result,that) =>{
       let existingItems = that.state.stocks;
